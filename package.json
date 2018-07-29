@@ -1,0 +1,26 @@
+{
+  "name": "timer",
+  "version": "0.0.0",
+  "description": "An accurate simple Timer class",
+  "main": "Timer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taitulism/timer.git"
+  },
+  "keywords": [
+    "ticker",
+    "timer",
+    "setTimeout",
+    "setInterval",
+    "clock"
+  ],
+  "author": "Taitu Lizenbaum",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/taitulism/timer/issues"
+  },
+  "homepage": "https://github.com/taitulism/timer#readme"
+}
