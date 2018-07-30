@@ -11,7 +11,7 @@ class Timer {
 	start (now = Date.now()) {
 		this.startTime = now;
 
-		this.ticker = new Ticker(1000, (targetTime) => {
+		this.ticker = this.ticker || new Ticker(1000, (targetTime) => {
 			this.tick(targetTime);
 		});
 		
@@ -35,8 +35,7 @@ class Timer {
 	}
 
 	end () {
-		this.ticker.pause();
-		this.ticker.reset();
+		this.ticker.stop();
 
 		if (typeof this.endCallback === 'function') {
 			this.endCallback();
@@ -44,6 +43,11 @@ class Timer {
 	}
 	
 	pause () {
+		const now = Date.now();
+		const timeLeft = this.startTime + this.duration - now;
+
+		this.duration = timeLeft;
+
 		this.ticker.pause();
 	}
 	
