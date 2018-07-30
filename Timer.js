@@ -3,12 +3,20 @@ const getTimePeriodValues = require('./get-time-period-values');
 
 class Timer {
 	constructor (duration) {
+		this.originalDuration = duration;
 		this.duration = duration;
 		this.startTime = null;
 		this.ticker = null;
+		this.isOn = false;
+		this.isReset = true;
 	}
 	
 	start (now = Date.now()) {
+		if (this.isOn) return;
+
+		this.isOn = true;
+		this.isReset = false;
+		
 		this.startTime = now;
 
 		this.ticker = this.ticker || new Ticker(1000, (targetTime) => {
@@ -18,7 +26,33 @@ class Timer {
 		this.ticker.start(now);
 	}
 
+	stop (now) {
+		if (!this.isOn) return;
+
+		this.isOn = false;
+
+		now = now || Date.now();
+
+		const timeLeft = this.startTime + this.duration - now;
+
+		this.duration = timeLeft;
+		this.ticker.stop(now);
+	}
+
+	reset (now) {
+		if (this.isReset) return;
+
+		now = now || Date.now();
+
+		this.startTime = now;
+		this.duration = this.originalDuration;
+
+		this.ticker.reset(now);
+	}
+
 	tick (targetTime) {
+		if (!this.isOn) return;
+
 		const now = Date.now();
 		const timeLeft = this.startTime + this.duration - targetTime;
 
@@ -35,27 +69,15 @@ class Timer {
 	}
 
 	end () {
+		this.isOn = false;
+		
 		this.ticker.stop();
-
+		
 		if (typeof this.endCallback === 'function') {
 			this.endCallback();
 		}
 	}
 	
-	pause () {
-		const now = Date.now();
-		const timeLeft = this.startTime + this.duration - now;
-
-		this.duration = timeLeft;
-
-		this.ticker.pause();
-	}
-	
-	reset () {
-		this.ticker.pause();
-		this.ticker.reset();
-	}
-
 	onTick (callback) {
 		if (typeof callback !== 'function') {
 			throw new Error('Timer callback nust be a function');
