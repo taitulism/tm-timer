@@ -1,6 +1,8 @@
 const Ticker = require('ticker');
 const getTimePeriodValues = require('./get-time-period-values');
 
+const SECOND = 1000;
+
 class Timer {
 	constructor (duration) {
 		this.originalDuration = duration;
@@ -19,7 +21,7 @@ class Timer {
 		
 		this.startTime = now;
 
-		this.ticker = this.ticker || new Ticker(1000, (targetTime) => {
+		this.ticker = this.ticker || new Ticker(SECOND, (targetTime) => {
 			this.tick(targetTime);
 		});
 		
@@ -56,7 +58,7 @@ class Timer {
 		const now = Date.now();
 		const timeLeft = this.startTime + this.duration - targetTime;
 
-		if (timeLeft < 1000) {
+		if (timeLeft < SECOND) {
 			this.end();
 		}
 		else {
@@ -74,7 +76,7 @@ class Timer {
 		this.ticker.stop();
 		
 		if (typeof this.endCallback === 'function') {
-			this.endCallback();
+			this.endCallback([0, 0, 0], 0);
 		}
 	}
 	
