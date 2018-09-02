@@ -1,4 +1,4 @@
-const Ticker = require('ticker');
+const Ticker = require('tm-ticker');
 const getTimePeriodValues = require('./get-time-period-values');
 
 const SECOND = 1000;

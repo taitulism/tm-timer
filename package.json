@@ -4,8 +4,10 @@
   "description": "An accurate simple Timer class",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ./index.js src playground"
+    "test": "jest",
+    "tdd": "jest --watch",
+    "lint": "eslint ./index.js src playground",
+    "tmp": "jest --init"
   },
   "repository": {
     "type": "git",
@@ -26,6 +28,10 @@
   },
   "homepage": "https://github.com/taitulism/timer#readme",
   "devDependencies": {
-    "eslint": "^5.5.0"
+    "eslint": "^5.5.0",
+    "jest": "^23.5.0"
+  },
+  "dependencies": {
+    "tm-ticker": "^1.0.0"
   }
 }
