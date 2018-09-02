@@ -13,7 +13,7 @@ An accurate simple Timer (count down) class based on [Ticker](https://github.com
 ```js
 import Timer from 'Timer';
 // or
-const Timer = require('Timer);
+const Timer = require('Timer');
 ```
 
 
