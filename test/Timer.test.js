@@ -1,7 +1,7 @@
 const Timer = require('../');
 
 test('Timer', () => {
-    const t = new Timer();
+	const timer = new Timer();
 
-    expect(t).toBeInstanceOf(Timer);
+	expect(timer).toBeInstanceOf(Timer);
 });
