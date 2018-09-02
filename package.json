@@ -1,18 +1,20 @@
 {
-  "name": "timer",
+  "name": "tm-timer",
   "version": "0.0.0",
   "description": "An accurate simple Timer class",
-  "main": "Timer.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./index.js src playground"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/taitulism/timer.git"
   },
   "keywords": [
-    "ticker",
     "timer",
+    "countdown",
+    "ticker",
     "setTimeout",
     "setInterval",
     "clock"
@@ -22,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/taitulism/timer/issues"
   },
-  "homepage": "https://github.com/taitulism/timer#readme"
+  "homepage": "https://github.com/taitulism/timer#readme",
+  "devDependencies": {
+    "eslint": "^5.5.0"
+  }
 }
