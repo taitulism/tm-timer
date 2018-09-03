@@ -14,12 +14,14 @@
     "url": "git+https://github.com/taitulism/timer.git"
   },
   "keywords": [
-    "timer",
-    "countdown",
-    "ticker",
-    "setTimeout",
-    "setInterval",
-    "clock"
+	"timer",
+	"countdown",
+	"count",
+	"down",
+	"clock",
+	"ticker",
+	"setTimeout",
+	"setInterval"
   ],
   "author": "Taitu Lizenbaum",
   "license": "MIT",
