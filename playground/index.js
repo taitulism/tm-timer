@@ -1,9 +1,12 @@
+/* eslint-disable no-console, no-magic-numbers */
+
 const Timer = require('../Timer');
-	
+
 const myTimer = new Timer(10000);
 
 myTimer.onTick((countDown, timeLeft) => {
 	const clock = `${countDown[0]}:${countDown[1]}:${countDown[2]}`;
+
 	console.log(clock, timeLeft);
 });
 
@@ -15,7 +18,7 @@ myTimer.start();
 
 setTimeout(() => {
 	myTimer.stop();
-	
+
 	setTimeout(() => {
 		myTimer.reset();
 	}, 2000);
