@@ -74,7 +74,7 @@ module.exports = {
         "max-params": ["error", { "max": 4 }],
         "max-statements": "warn",
         "max-statements-per-line": "error",
-        "multiline-comment-style": "error",
+        // "multiline-comment-style": "off",
         "multiline-ternary": "error",
         "new-cap": "error",
         "new-parens": "error",
