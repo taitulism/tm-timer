@@ -6,22 +6,21 @@
   "scripts": {
     "test": "jest",
     "tdd": "jest --watch",
-    "lint": "eslint ./index.js src playground",
-    "tmp": "jest --init"
+    "lint": "eslint ./index.js src playground"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/taitulism/timer.git"
   },
   "keywords": [
-	"timer",
-	"countdown",
-	"count",
-	"down",
-	"clock",
-	"ticker",
-	"setTimeout",
-	"setInterval"
+    "timer",
+    "countdown",
+    "count",
+    "down",
+    "clock",
+    "ticker",
+    "setTimeout",
+    "setInterval"
   ],
   "author": "Taitu Lizenbaum",
   "license": "MIT",
@@ -34,6 +33,6 @@
     "jest": "^23.5.0"
   },
   "dependencies": {
-    "tm-ticker": "^1.0.0"
+    "tm-ticker": "^1.2.0"
   }
 }
