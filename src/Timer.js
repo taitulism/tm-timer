@@ -1,96 +1,65 @@
 const Ticker = require('tm-ticker');
-const getTimePeriodValues = require('./get-time-period-values');
 
-const SECOND = 1000;
-const ZEROED_CLOCK = [0, 0, 0];
+const HALF_A_SECOND = 500;
 
 class Timer {
-	constructor (duration) {
-		this.originalDuration = duration;
-		this.duration = duration;
-		this.startTime = null;
-		this.ticker = null;
-		this.isOn = false;
-		this.isReset = true;
-	}
-
-	start (now = Date.now()) {
-		if (this.isOn) return;
-
-		this.isOn = true;
-		this.isReset = false;
-
-		this.startTime = now;
-
-		this.ticker = this.ticker || new Ticker(SECOND, (targetTime) => {
-			this.tick(targetTime);
+	constructor () {
+		this.ticker = new Ticker(HALF_A_SECOND, () => {
+			this.tickHandler();
 		});
 
-		this.ticker.start(now);
+		this.isOneSecTick = true;
+
+		this.duration = null;
+		this.finalCallback = null;
+
+		this.oneSecFn = null;
+		this.halfSecFn = null;
 	}
 
-	stop (now = Date.now()) {
-		if (!this.isOn) return;
-
-		this.isOn = false;
-
-		const timeLeft = this.startTime + this.duration - now;
-
-		this.duration = timeLeft;
-		this.ticker.stop(now);
+	set (duration) {
+		this.duration = duration;
 	}
 
-	reset (now = Date.now()) {
-		if (this.isReset) return;
-
-		this.startTime = now;
-		this.duration = this.originalDuration;
-
-		this.ticker.reset(now);
+	whenDone (callback) {
+		this.finalCallback = callback;
 	}
 
-	tick (targetTime) {
-		if (!this.isOn) return;
+	onTick (fn) {
+		if (typeof fn === 'function') {
+			this.oneSecFn = fn;
+		}
+	}
 
-		const timeLeft = this.startTime + this.duration - targetTime;
+	onHalfTick (fn) {
+		if (typeof fn === 'function') {
+			this.halfSecFn = fn;
+		}
+	}
 
-		if (timeLeft < SECOND) {
-			this.end();
+	tickHandler () {
+		if (this.isOneSecTick) {
+			this.oneSecFn && this.oneSecFn();
 		}
 		else {
-			const clockValues = getTimePeriodValues(timeLeft);
-
-			if (typeof this.tickCallback === 'function') {
-				this.tickCallback(clockValues, timeLeft);
-			}
-		}
-	}
-
-	end () {
-		this.isOn = false;
-
-		this.ticker.stop();
-
-		if (typeof this.endCallback === 'function') {
-			this.endCallback(ZEROED_CLOCK, 0);
-		}
-	}
-
-	onTick (callback) {
-		if (typeof callback !== 'function') {
-			throw new Error('Timer callback nust be a function');
+			this.halfSecFn && this.halfSecFn();
 		}
 
-		this.tickCallback = callback;
+		this.isOneSecTick = !this.isOneSecTick;
 	}
 
-	onEnd (callback) {
-		if (typeof callback !== 'function') {
-			throw new Error('Timer callback nust be a function');
-		}
+	start () {
+		this.isRunning = true;
 
-		this.endCallback = callback;
+		this.ticker.start();
+
+		setTimeout(() => {
+			this.ticker.stop();
+			this.finalCallback();
+		}, this.duration);
 	}
+
+
 }
 
 module.exports = Timer;
