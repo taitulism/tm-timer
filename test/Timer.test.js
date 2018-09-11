@@ -23,6 +23,21 @@ function getTimerWithFinalCallback (finalCallback = emptyFn) {
 	return timer;
 }
 
+function getConfiguredTimer () {
+	const finalSpy = jest.fn();
+	const oneSecondSpy = jest.fn();
+	const halfSecondSpy = jest.fn();
+
+	const timer = new Timer();
+
+	timer.whenDone(finalSpy);
+	timer.onTick(oneSecondSpy);
+	timer.onHalfTick(halfSecondSpy);
+	timer.set(THREE_SECONDS);
+
+	return timer;
+}
+
 describe('Timer', () => {
 	describe('Creation', () => {
 		test('Basic', () => {
@@ -122,6 +137,79 @@ describe('Timer', () => {
 				expect(spy).toHaveBeenCalledTimes(3);
 			});
 		});
-	});
 
+		describe('.stop()', () => {
+			test('stops counting down', () => {
+				jest.useFakeTimers();
+
+				const timer = getTimerWithFinalCallback();
+
+				timer.start();
+				timer.stop();
+
+				jest.runAllTimers();
+
+				expect(timer.isRunning).toEqual(false);
+			});
+
+			test('does not call the final callback', (done) => {
+				jest.useFakeTimers();
+
+				const timer = getConfiguredTimer();
+
+				timer.start();
+
+				setTimeout(() => {
+					timer.stop();
+
+					setTimeout(() => {
+						expect(timer.finalCallback).not.toHaveBeenCalled();
+						done();
+					}, 4000);
+				}, 1000);
+
+				jest.runAllTimers();
+			});
+
+			test('stop calling the one-second tick', (done) => {
+				jest.useFakeTimers();
+
+				const timer = getConfiguredTimer();
+
+				timer.start();
+
+				setTimeout(() => {
+					expect(timer.oneSecFn).toHaveBeenCalledTimes(2);
+					timer.stop();
+
+					setTimeout(() => {
+						expect(timer.oneSecFn).toHaveBeenCalledTimes(2);
+						done();
+					}, 2000);
+				}, 1000);
+
+				jest.runAllTimers();
+			});
+
+			test('stop calling the half-a-second tick', (done) => {
+				jest.useFakeTimers();
+
+				const timer = getConfiguredTimer();
+
+				timer.start();
+
+				setTimeout(() => {
+					expect(timer.halfSecFn).toHaveBeenCalledTimes(2);
+					timer.stop();
+
+					setTimeout(() => {
+						expect(timer.halfSecFn).toHaveBeenCalledTimes(2);
+						done();
+					}, 2000);
+				}, 2000);
+
+				jest.runAllTimers();
+			});
+		});
+	});
 });

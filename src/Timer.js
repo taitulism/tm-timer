@@ -9,6 +9,7 @@ class Timer {
 		});
 
 		this.isOneSecTick = true;
+		this.ref = null;
 
 		this.duration = null;
 		this.finalCallback = null;
@@ -53,13 +54,21 @@ class Timer {
 
 		this.ticker.start();
 
-		setTimeout(() => {
-			this.ticker.stop();
+		this.ref = setTimeout(() => {
+			this.stop();
 			this.finalCallback();
 		}, this.duration);
 	}
 
+	stop () {
+		this.isRunning = false;
 
+		this.ticker.stop();
+
+		clearTimeout(this.ref);
+
+		this.ref = null;
+	}
 }
 
 module.exports = Timer;
