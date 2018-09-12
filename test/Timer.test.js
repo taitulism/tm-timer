@@ -4,6 +4,7 @@
 const Timer = require('../');
 
 const THREE_SECONDS = 3000;
+const ALMOST_THREE_SECONDS = 2950;
 
 const emptyFn = () => {}; // eslint-disable-line no-empty-function
 
@@ -209,6 +210,52 @@ describe('Timer', () => {
 				}, 2000);
 
 				jest.runAllTimers();
+			});
+		});
+
+		describe('.reset()', () => {
+			describe('when called while running', () => {
+				test('start counting down with the same duration', () => {
+					jest.useFakeTimers();
+
+					const timer = getConfiguredTimer();
+
+					timer.start();
+
+					jest.advanceTimersByTime(ALMOST_THREE_SECONDS);
+					expect(timer.finalCallback).not.toHaveBeenCalled();
+
+					timer.reset();
+
+					jest.advanceTimersByTime(ALMOST_THREE_SECONDS);
+					expect(timer.finalCallback).not.toHaveBeenCalled();
+
+					jest.advanceTimersByTime(50);
+					expect(timer.finalCallback).toHaveBeenCalled();
+				});
+			});
+
+			describe('when called after .stop()', () => {
+				test('reset the timer', () => {
+					jest.useFakeTimers();
+
+					const timer = getConfiguredTimer();
+
+					timer.start();
+
+					jest.advanceTimersByTime(2500);
+					timer.stop();
+					timer.reset();
+
+					jest.advanceTimersByTime(5000);
+
+					timer.start();
+
+					jest.advanceTimersByTime(ALMOST_THREE_SECONDS);
+					expect(timer.finalCallback).not.toHaveBeenCalled();
+					jest.advanceTimersByTime(50);
+					expect(timer.finalCallback).toHaveBeenCalled();
+				});
 			});
 		});
 	});

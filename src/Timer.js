@@ -50,6 +50,8 @@ class Timer {
 	}
 
 	start () {
+		if (this.isRunning) return;
+
 		this.isRunning = true;
 
 		this.ticker.start();
@@ -61,6 +63,8 @@ class Timer {
 	}
 
 	stop () {
+		if (!this.isRunning) return;
+
 		this.isRunning = false;
 
 		this.ticker.stop();
@@ -68,6 +72,16 @@ class Timer {
 		clearTimeout(this.ref);
 
 		this.ref = null;
+	}
+
+	reset () {
+		this.ticker.reset();
+		this.isOneSecTick = true;
+
+		if (this.isRunning) {
+			this.stop();
+			this.start();
+		}
 	}
 }
 
