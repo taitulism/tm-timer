@@ -8,23 +8,21 @@ const ALMOST_THREE_SECONDS = 2950;
 
 const emptyFn = () => {}; // eslint-disable-line no-empty-function
 
-function getASetTimer (duration = THREE_SECONDS) {
-	const timer = new Timer();
-
-	timer.set(duration);
+function getBasicTimer (duration = THREE_SECONDS) {
+	const timer = new Timer(duration);
 
 	return timer;
 }
 
-function getTimerWithFinalCallback (finalCallback = emptyFn) {
-	const timer = getASetTimer();
+function getTimerWithFinalCallback (done = emptyFn) {
+	const timer = getBasicTimer();
 
-	timer.whenDone(finalCallback);
+	timer.whenDone(done);
 
 	return timer;
 }
 
-function getConfiguredTimer () {
+function getSpyTimer () {
 	const finalSpy = jest.fn();
 	const oneSecondSpy = jest.fn();
 	const halfSecondSpy = jest.fn();
@@ -41,48 +39,65 @@ function getConfiguredTimer () {
 
 describe('Timer', () => {
 	describe('Creation', () => {
-		test('Basic', () => {
-			expect(() => {
-				new Timer(); // eslint-disable-line no-new
-			}).not.toThrow();
+		describe('Empty', () => {
+			test('created without error', () => {
+				expect(() => {
+					new Timer(); // eslint-disable-line no-new
+				}).not.toThrow();
 
-			const timer = new Timer();
+				const timer = new Timer();
 
-			expect(timer instanceof Timer).toBeTruthy();
+				expect(timer instanceof Timer).toBeTruthy();
+			});
+		});
+
+		describe('with duration and final callback', () => {
+			test('set duration and final callback', () => {
+				const timer = new Timer(THREE_SECONDS, emptyFn);
+
+				expect(timer.duration).toEqual(THREE_SECONDS);
+				expect(timer.done).toEqual(emptyFn);
+			});
 		});
 	});
 
 	describe('Configuration', () => {
-		test('set time to count down', () => {
-			const timer = new Timer();
+		describe('.set(duration)', () => {
+			test('set time to count down', () => {
+				const timer = new Timer();
 
-			timer.set(THREE_SECONDS);
+				timer.set(THREE_SECONDS);
 
-			expect(timer.duration).toEqual(THREE_SECONDS);
+				expect(timer.duration).toEqual(THREE_SECONDS);
+			});
 		});
 
-		test('set final callback', () => {
-			const timer = getASetTimer();
+		describe('.whenDone(fn)', () => {
+			test('set final callback', () => {
+				const timer = new Timer();
 
-			timer.whenDone(emptyFn);
+				timer.whenDone(emptyFn);
 
-			expect(timer.finalCallback).toEqual(emptyFn);
+				expect(timer.done).toEqual(emptyFn);
+			});
 		});
 
-		test('set one second callback', () => {
-			const timer = getASetTimer();
+		describe('.onTick(fn)', () => {
+			test('set one second callback', () => {
+				const timer = getBasicTimer();
 
-			expect(timer.oneSecFn).toEqual(null);
-			timer.onTick(emptyFn);
-			expect(timer.oneSecFn).toEqual(emptyFn);
-		});
+				expect(timer.oneSecFn).toEqual(null);
+				timer.onTick(emptyFn);
+				expect(timer.oneSecFn).toEqual(emptyFn);
+			});
 
-		test('set half a second callback', () => {
-			const timer = getASetTimer();
+			test('set half a second callback', () => {
+				const timer = getBasicTimer();
 
-			expect(timer.halfSecFn).toEqual(null);
-			timer.onHalfTick(emptyFn);
-			expect(timer.halfSecFn).toEqual(emptyFn);
+				expect(timer.halfSecFn).toEqual(null);
+				timer.onHalfTick(emptyFn);
+				expect(timer.halfSecFn).toEqual(emptyFn);
+			});
 		});
 	});
 
@@ -112,7 +127,7 @@ describe('Timer', () => {
 				jest.useFakeTimers();
 
 				const spy = jest.fn();
-				const timer = getASetTimer();
+				const timer = getBasicTimer();
 
 				timer.onTick(spy);
 				timer.whenDone(emptyFn);
@@ -127,7 +142,7 @@ describe('Timer', () => {
 				jest.useFakeTimers();
 
 				const spy = jest.fn();
-				const timer = getASetTimer();
+				const timer = getBasicTimer();
 
 				timer.onHalfTick(spy);
 				timer.whenDone(emptyFn);
@@ -156,7 +171,7 @@ describe('Timer', () => {
 			test('does not call the final callback', (done) => {
 				jest.useFakeTimers();
 
-				const timer = getConfiguredTimer();
+				const timer = getSpyTimer();
 
 				timer.start();
 
@@ -164,7 +179,7 @@ describe('Timer', () => {
 					timer.stop();
 
 					setTimeout(() => {
-						expect(timer.finalCallback).not.toHaveBeenCalled();
+						expect(timer.done).not.toHaveBeenCalled();
 						done();
 					}, 4000);
 				}, 1000);
@@ -175,7 +190,7 @@ describe('Timer', () => {
 			test('stop calling the one-second tick', (done) => {
 				jest.useFakeTimers();
 
-				const timer = getConfiguredTimer();
+				const timer = getSpyTimer();
 
 				timer.start();
 
@@ -195,7 +210,7 @@ describe('Timer', () => {
 			test('stop calling the half-a-second tick', (done) => {
 				jest.useFakeTimers();
 
-				const timer = getConfiguredTimer();
+				const timer = getSpyTimer();
 
 				timer.start();
 
@@ -218,20 +233,20 @@ describe('Timer', () => {
 				test('start counting down with the same duration', () => {
 					jest.useFakeTimers();
 
-					const timer = getConfiguredTimer();
+					const timer = getSpyTimer();
 
 					timer.start();
 
 					jest.advanceTimersByTime(ALMOST_THREE_SECONDS);
-					expect(timer.finalCallback).not.toHaveBeenCalled();
+					expect(timer.done).not.toHaveBeenCalled();
 
 					timer.reset();
 
 					jest.advanceTimersByTime(ALMOST_THREE_SECONDS);
-					expect(timer.finalCallback).not.toHaveBeenCalled();
+					expect(timer.done).not.toHaveBeenCalled();
 
 					jest.advanceTimersByTime(50);
-					expect(timer.finalCallback).toHaveBeenCalled();
+					expect(timer.done).toHaveBeenCalled();
 				});
 			});
 
@@ -239,7 +254,7 @@ describe('Timer', () => {
 				test('reset the timer', () => {
 					jest.useFakeTimers();
 
-					const timer = getConfiguredTimer();
+					const timer = getSpyTimer();
 
 					timer.start();
 
@@ -252,9 +267,9 @@ describe('Timer', () => {
 					timer.start();
 
 					jest.advanceTimersByTime(ALMOST_THREE_SECONDS);
-					expect(timer.finalCallback).not.toHaveBeenCalled();
+					expect(timer.done).not.toHaveBeenCalled();
 					jest.advanceTimersByTime(50);
-					expect(timer.finalCallback).toHaveBeenCalled();
+					expect(timer.done).toHaveBeenCalled();
 				});
 			});
 		});

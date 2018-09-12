@@ -3,7 +3,7 @@ const Ticker = require('tm-ticker');
 const HALF_A_SECOND = 500;
 
 class Timer {
-	constructor () {
+	constructor (duration, whenDone) {
 		this.ticker = new Ticker(HALF_A_SECOND, () => {
 			this.tickHandler();
 		});
@@ -11,19 +11,19 @@ class Timer {
 		this.isOneSecTick = true;
 		this.ref = null;
 
-		this.duration = null;
-		this.finalCallback = null;
+		duration && this.set(duration);
+		whenDone && this.whenDone(whenDone);
 
 		this.oneSecFn = null;
 		this.halfSecFn = null;
 	}
 
 	set (duration) {
-		this.duration = duration;
+		this.duration = typeof duration === 'number'? duration : null;
 	}
 
 	whenDone (callback) {
-		this.finalCallback = callback;
+		this.done = typeof callback === 'function' ? callback : null;
 	}
 
 	onTick (fn) {
@@ -58,7 +58,7 @@ class Timer {
 
 		this.ref = setTimeout(() => {
 			this.stop();
-			this.finalCallback();
+			this.done();
 		}, this.duration);
 	}
 
