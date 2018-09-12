@@ -168,7 +168,9 @@ module.exports = {
         "no-underscore-dangle": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
-        "no-unused-expressions": "error",
+        "no-unused-expressions": ["error", {
+			"allowShortCircuit": true
+		}],
         "no-use-before-define": ["error", {
             "functions": false,
             "classes": false
