@@ -225,8 +225,8 @@ module.exports = {
         //     "last"
         // ],
         "sort-imports": "error",
-        "sort-keys": "error",
-        "sort-vars": "error",
+//      "sort-keys": "off",
+//      "sort-vars": "off",
         "space-before-blocks": "error",
         "space-before-function-paren": "error",
         "space-in-parens": [
