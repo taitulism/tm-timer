@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "tdd": "jest --watch",
-	"lint": "eslint ./index.js src playground",
-	"playground": "node ./playground/index.js"
+    "lint": "eslint ./index.js src playground",
+    "playground": "node ./playground/index.js"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,8 @@
   "homepage": "https://github.com/taitulism/timer#readme",
   "devDependencies": {
     "eslint": "^5.5.0",
-    "jest": "^23.5.0"
+    "jest": "^23.5.0",
+    "lolex": "^2.7.4"
   },
   "dependencies": {
     "tm-ticker": "^1.2.0"
