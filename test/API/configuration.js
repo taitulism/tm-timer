@@ -10,7 +10,7 @@ describe('Configuration', () => {
 	let timer;
 
 	beforeEach(() => {
-		timer = new Timer(THREE_SECONDS);
+		timer = new Timer();
 	});
 
 	afterEach(() => {
@@ -19,6 +19,8 @@ describe('Configuration', () => {
 
 	describe('.set(duration)', () => {
 		test('set time to count down', () => {
+			timer.set(THREE_SECONDS);
+
 			expect(timer.duration).toEqual(THREE_SECONDS);
 		});
 	});
