@@ -43,7 +43,7 @@ describe('.start()', () => {
 		timer.onTick(spy);
 
 		expect(spy).toHaveBeenCalledTimes(0);
-		timer.start();
+		timer.start(0);
 		expect(spy).toHaveBeenCalledTimes(1);
 		clock.tick(HALF_A_SECOND); // 500
 		expect(spy).toHaveBeenCalledTimes(2);
@@ -79,14 +79,14 @@ describe('.start()', () => {
 			}
 		});
 
-		timer.start();
+		timer.start(0);
 		clock.runAll();
 	});
 
 	test('calls the final callback when countdown is over', () => {
 		const timer = getSpyTimer();
 
-		timer.start();
+		timer.start(0);
 		clock.runAll();
 
 		expect(timer.done).toHaveBeenCalledTimes(1);

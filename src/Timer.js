@@ -1,6 +1,7 @@
 const Ticker = require('tm-ticker');
 
 const HALF_A_SECOND = 500;
+const getNow = Date.now;
 
 /*
  * Private method. Called with a Timer instance as context of `this`.
@@ -51,27 +52,27 @@ class Timer {
 		return this;
 	}
 
-	start () {
+	start (now = getNow()) {
 		if (this.isRunning) return;
 
 		this.isRunning = true;
 
-		this.ticker.start();
+		this.ticker.start(now);
 
 		this.ref = setTimeout(() => {
-			this.stop();
+			this.stop(now + this.duration);
 			this.done && this.done();
 		}, this.duration);
 
 		return this;
 	}
 
-	stop () {
+	stop (now = getNow()) {
 		if (!this.isRunning) return;
 
 		this.isRunning = false;
 
-		this.ticker.stop();
+		this.ticker.stop(now);
 
 		clearTimeout(this.ref);
 
@@ -80,13 +81,13 @@ class Timer {
 		return this;
 	}
 
-	reset () {
-		this.ticker.reset();
+	reset (now = getNow()) {
+		this.ticker.reset(now);
 		this.isWholeSecond = true;
 
 		if (this.isRunning) {
-			this.stop();
-			this.start();
+			this.stop(now);
+			this.start(now);
 		}
 
 		return this;

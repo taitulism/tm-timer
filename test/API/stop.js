@@ -51,7 +51,7 @@ describe('.stop()', () => {
 		const timer = getSpyTimer();
 		const spy = jest.fn();
 
-		timer.onTick(spy).start();
+		timer.onTick(spy).start(0);
 
 		clock.tick(ALMOST_THREE_SECONDS);
 		expect(timer.tickFn).toHaveBeenCalledTimes(6);
