@@ -54,7 +54,7 @@ class Timer {
 
 		this.ref = setTimeout(() => {
 			this.stop();
-			this.done();
+			this.done && this.done();
 		}, this.duration);
 	}
 
