@@ -2,10 +2,19 @@ const Ticker = require('tm-ticker');
 
 const HALF_A_SECOND = 500;
 
+/*
+ * Private method. Called with a Timer instance as context of `this`.
+ */
+const tickHandler = () => {
+	this.tickFn && this.tickFn(this.isWholeSecond);
+
+	this.isWholeSecond = !this.isWholeSecond;
+};
+
 class Timer {
 	constructor (duration, whenDone) {
 		this.ticker = new Ticker(HALF_A_SECOND, () => {
-			this.tickHandler();
+			tickHandler.call(this);
 		});
 
 		this.isWholeSecond = true;
@@ -19,29 +28,21 @@ class Timer {
 	}
 
 	set (duration) {
-		this.duration = typeof duration === 'number'? duration : null;
+		this.duration = typeof duration === 'number'
+			? duration
+			: null;
 	}
 
 	whenDone (callback) {
-		this.done = typeof callback === 'function' ? callback : null;
+		this.done = typeof callback === 'function'
+			? callback
+			: null;
 	}
 
 	onTick (fn) {
 		if (typeof fn === 'function') {
 			this.tickFn = fn;
 		}
-	}
-
-	onHalfTick (fn) {
-		if (typeof fn === 'function') {
-			this.halfSecFn = fn;
-		}
-	}
-
-	tickHandler () {
-		this.tickFn && this.tickFn(this.isWholeSecond);
-
-		this.isWholeSecond = !this.isWholeSecond;
 	}
 
 	start () {
