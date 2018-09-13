@@ -21,11 +21,16 @@ describe('.stop()', () => {
 		clock.uninstall();
 	});
 
-	test('stops counting down', () => {
-		const timer = new Timer();
+	test('return instance', () => {
+		const timer = getSpyTimer().start();
 
-		timer.start();
-		timer.stop();
+		const returnValue = timer.stop();
+
+		expect(returnValue).toBe(timer);
+	});
+
+	test('stops counting down', () => {
+		const timer = new Timer().start().stop();
 
 		clock.runAll();
 
@@ -33,9 +38,8 @@ describe('.stop()', () => {
 	});
 
 	test('does not call the final callback', () => {
-		const timer = getSpyTimer();
+		const timer = getSpyTimer().start();
 
-		timer.start();
 		clock.tick(ALMOST_THREE_SECONDS);
 		timer.stop();
 		clock.tick(MORE_THAN_THREE_SECONDS);
@@ -47,9 +51,7 @@ describe('.stop()', () => {
 		const timer = getSpyTimer();
 		const spy = jest.fn();
 
-		timer.onTick(spy);
-
-		timer.start();
+		timer.onTick(spy).start();
 
 		clock.tick(ALMOST_THREE_SECONDS);
 		expect(timer.tickFn).toHaveBeenCalledTimes(6);

@@ -1,4 +1,5 @@
 /* eslint-env jest */
+/* eslint-disable max-lines-per-function */
 
 const {
 	Timer,
@@ -23,6 +24,12 @@ describe('Configuration', () => {
 
 			expect(timer.duration).toEqual(THREE_SECONDS);
 		});
+
+		test('return instance', () => {
+			const returnValue = timer.set(THREE_SECONDS);
+
+			expect(returnValue).toBe(timer);
+		});
 	});
 
 	describe('.whenDone(fn)', () => {
@@ -31,6 +38,12 @@ describe('Configuration', () => {
 
 			expect(timer.done).toEqual(emptyFn);
 		});
+
+		test('return instance', () => {
+			const returnValue = timer.whenDone(emptyFn);
+
+			expect(returnValue).toBe(timer);
+		});
 	});
 
 	describe('.onTick(fn)', () => {
@@ -38,6 +51,12 @@ describe('Configuration', () => {
 			timer.onTick(emptyFn);
 
 			expect(timer.tickFn).toEqual(emptyFn);
+		});
+
+		test('return instance', () => {
+			const returnValue = timer.onTick(emptyFn);
+
+			expect(returnValue).toBe(timer);
 		});
 	});
 });

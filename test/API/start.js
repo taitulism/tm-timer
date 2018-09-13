@@ -21,10 +21,16 @@ describe('.start()', () => {
 		clock.uninstall();
 	});
 
-	test('starts running', () => {
+	test('return instance', () => {
 		const timer = getSpyTimer();
 
-		timer.start();
+		const returnValue = timer.start();
+
+		expect(returnValue).toBe(timer);
+	});
+
+	test('starts running', () => {
+		const timer = getSpyTimer().start();
 
 		expect(timer.isRunning).toEqual(true);
 	});

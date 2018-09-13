@@ -31,18 +31,24 @@ class Timer {
 		this.duration = typeof duration === 'number'
 			? duration
 			: null;
+
+		return this;
 	}
 
 	whenDone (callback) {
 		this.done = typeof callback === 'function'
 			? callback
 			: null;
+
+		return this;
 	}
 
 	onTick (fn) {
 		if (typeof fn === 'function') {
 			this.tickFn = fn;
 		}
+
+		return this;
 	}
 
 	start () {
@@ -56,6 +62,8 @@ class Timer {
 			this.stop();
 			this.done && this.done();
 		}, this.duration);
+
+		return this;
 	}
 
 	stop () {
@@ -68,6 +76,8 @@ class Timer {
 		clearTimeout(this.ref);
 
 		this.ref = null;
+
+		return this;
 	}
 
 	reset () {
@@ -78,6 +88,8 @@ class Timer {
 			this.stop();
 			this.start();
 		}
+
+		return this;
 	}
 }
 

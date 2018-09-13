@@ -13,8 +13,9 @@ function getSpyTimer () {
 
 	const timer = new Timer(THREE_SECONDS);
 
-	timer.whenDone(finalSpy);
-	timer.onTick(tickSpy);
+	timer
+		.whenDone(finalSpy)
+		.onTick(tickSpy);
 
 	return timer;
 }

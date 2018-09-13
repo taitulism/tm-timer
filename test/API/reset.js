@@ -20,6 +20,13 @@ describe('.reset()', () => {
 		clock.uninstall();
 	});
 
+	test('return instance', () => {
+		const timer = getSpyTimer().start();
+		const returnValue = timer.reset();
+
+		expect(returnValue).toBe(timer);
+	});
+
 	describe('when called while running', () => {
 		test('start counting down with the same duration', () => {
 			const timer = getSpyTimer();
