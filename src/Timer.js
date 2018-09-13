@@ -5,11 +5,11 @@ const HALF_A_SECOND = 500;
 /*
  * Private method. Called with a Timer instance as context of `this`.
  */
-const tickHandler = () => {
+function tickHandler () {
 	this.tickFn && this.tickFn(this.isWholeSecond);
 
 	this.isWholeSecond = !this.isWholeSecond;
-};
+}
 
 class Timer {
 	constructor (duration, whenDone) {
