@@ -24,15 +24,13 @@ function getTimerWithFinalCallback (done = emptyFn) {
 
 function getSpyTimer () {
 	const finalSpy = jest.fn();
-	const oneSecondSpy = jest.fn();
-	const halfSecondSpy = jest.fn();
+	const tickSpy  = jest.fn();
 
-	const timer = new Timer();
+	const timer = new Timer(THREE_SECONDS);
 
 	timer.whenDone(finalSpy);
-	timer.onTick(oneSecondSpy);
-	timer.onHalfTick(halfSecondSpy);
-	timer.set(THREE_SECONDS);
+	timer.onTick(tickSpy);
+	// timer.set(THREE_SECONDS);
 
 	return timer;
 }
@@ -83,21 +81,15 @@ describe('Timer', () => {
 		});
 
 		describe('.onTick(fn)', () => {
-			test('set one second callback', () => {
-				const timer = getBasicTimer();
+			test('set a tick callback', () => {
+				const timer = new Timer();
 
-				expect(timer.oneSecFn).toEqual(null);
-				timer.onTick(emptyFn);
-				expect(timer.oneSecFn).toEqual(emptyFn);
+				timer.onTick(emptyFn)
+
+				expect(timer.tickFn).toEqual(emptyFn);
 			});
 
-			test('set half a second callback', () => {
-				const timer = getBasicTimer();
 
-				expect(timer.halfSecFn).toEqual(null);
-				timer.onHalfTick(emptyFn);
-				expect(timer.halfSecFn).toEqual(emptyFn);
-			});
 		});
 	});
 
@@ -123,34 +115,55 @@ describe('Timer', () => {
 				expect(spy).toHaveBeenCalledTimes(1);
 			});
 
-			test('calls the one-second tick handler every second', () => {
+			test('tick callback runs every 500ms', (done) => {
 				jest.useFakeTimers();
 
 				const spy = jest.fn();
-				const timer = getBasicTimer();
+				let count = 0;
+
+				const timer = new Timer(THREE_SECONDS);
 
 				timer.onTick(spy);
-				timer.whenDone(emptyFn);
 
 				timer.start();
-				jest.runAllTimers();
-
+				expect(spy).toHaveBeenCalledTimes(1);
+				jest.advanceTimersByTime(500);
+				expect(spy).toHaveBeenCalledTimes(2);
+				jest.advanceTimersByTime(500);
+				expect(spy).toHaveBeenCalledTimes(3);
+				jest.advanceTimersByTime(500);
 				expect(spy).toHaveBeenCalledTimes(4);
+				jest.advanceTimersByTime(500);
+				expect(spy).toHaveBeenCalledTimes(5);
+
+				jest.clearAllTimers();
 			});
 
-			test('calls the half-a-second tick handler every 500ms', () => {
+			test('call the tick function with a whole/half second flag (true = whole)', (done) => {
 				jest.useFakeTimers();
 
-				const spy = jest.fn();
-				const timer = getBasicTimer();
+				let odd  = 0;
+				let even = 0;
 
-				timer.onHalfTick(spy);
-				timer.whenDone(emptyFn);
+				const timer = new Timer(THREE_SECONDS, () => {
+					expect(odd).toEqual(3);
+					expect(even).toEqual(4);
+
+					done();
+				});
+
+				timer.onTick((isWholeSecond) => {
+					if (isWholeSecond) {
+						even++;
+					}
+					else {
+						odd++;
+					}
+				});
 
 				timer.start();
-				jest.runAllTimers();
 
-				expect(spy).toHaveBeenCalledTimes(3);
+				jest.runAllTimers();
 			});
 		});
 
@@ -187,44 +200,36 @@ describe('Timer', () => {
 				jest.runAllTimers();
 			});
 
-			test('stop calling the one-second tick', (done) => {
+			test('stop calling the tick function', () => {
 				jest.useFakeTimers();
 
 				const timer = getSpyTimer();
+				// const spy = jest.fn();
+
+				// timer.onTick = (() => {
+				// 	console.log(123);
+				// 	spy()
+				// })
 
 				timer.start();
+				expect(timer.tickFn).toHaveBeenCalledTimes(1);
+				// console.log(timer.tickFn.mock.calls);
 
-				setTimeout(() => {
-					expect(timer.oneSecFn).toHaveBeenCalledTimes(2);
-					timer.stop();
+				jest.advanceTimersByTime(3000);
+				// console.log(timer.tickFn.mock.calls);
+				expect(timer.tickFn).toHaveBeenCalledTimes(5);
 
-					setTimeout(() => {
-						expect(timer.oneSecFn).toHaveBeenCalledTimes(2);
-						done();
-					}, 2000);
-				}, 1000);
+				// setTimeout(() => {
+				// 	timer.stop();
 
-				jest.runAllTimers();
-			});
+				// 	setTimeout(() => {
+				// 		expect(timer.tickFn).toHaveBeenCalledTimes(2);
+				// 		done();
+				// 	}, 2000);
+				// }, 1000);
 
-			test('stop calling the half-a-second tick', (done) => {
-				jest.useFakeTimers();
-
-				const timer = getSpyTimer();
-
-				timer.start();
-
-				setTimeout(() => {
-					expect(timer.halfSecFn).toHaveBeenCalledTimes(2);
-					timer.stop();
-
-					setTimeout(() => {
-						expect(timer.halfSecFn).toHaveBeenCalledTimes(2);
-						done();
-					}, 2000);
-				}, 2000);
-
-				jest.runAllTimers();
+				// jest.runAllTimers();
+				jest.useRealTimers();
 			});
 		});
 

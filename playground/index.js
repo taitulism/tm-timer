@@ -6,13 +6,9 @@ const myTimer = new Timer();
 
  let counter = 0;
 
-myTimer.onTick(() => {
-	console.log('tick', counter++);
+myTimer.onTick((bool) => {
+	console.log('tick', bool, counter++);
 });
-
-// myTimer.onHalfTick(() => {
-// 	console.log('tock');
-// });
 
 myTimer.whenDone(() => {
 	console.log('*** Done ***');
@@ -24,5 +20,6 @@ myTimer.start();
 
 setTimeout(() => {
 	console.log('reset');
+	counter = 0;
 	myTimer.reset();
 }, 3500);

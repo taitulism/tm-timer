@@ -8,13 +8,13 @@ class Timer {
 			this.tickHandler();
 		});
 
-		this.isOneSecTick = true;
+		this.isWholeSecond = true;
 		this.ref = null;
 
 		duration && this.set(duration);
 		whenDone && this.whenDone(whenDone);
 
-		this.oneSecFn = null;
+		this.tickFn = null;
 		this.halfSecFn = null;
 	}
 
@@ -28,7 +28,7 @@ class Timer {
 
 	onTick (fn) {
 		if (typeof fn === 'function') {
-			this.oneSecFn = fn;
+			this.tickFn = fn;
 		}
 	}
 
@@ -39,14 +39,9 @@ class Timer {
 	}
 
 	tickHandler () {
-		if (this.isOneSecTick) {
-			this.oneSecFn && this.oneSecFn();
-		}
-		else {
-			this.halfSecFn && this.halfSecFn();
-		}
+		this.tickFn && this.tickFn(this.isWholeSecond);
 
-		this.isOneSecTick = !this.isOneSecTick;
+		this.isWholeSecond = !this.isWholeSecond;
 	}
 
 	start () {
@@ -76,7 +71,7 @@ class Timer {
 
 	reset () {
 		this.ticker.reset();
-		this.isOneSecTick = true;
+		this.isWholeSecond = true;
 
 		if (this.isRunning) {
 			this.stop();
