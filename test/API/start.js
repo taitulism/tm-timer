@@ -18,6 +18,7 @@ describe('.start()', () => {
 	});
 
 	afterEach(() => {
+		clock.reset();
 		clock.uninstall();
 	});
 
@@ -59,36 +60,66 @@ describe('.start()', () => {
 		expect(spy).toHaveBeenCalledTimes(7);
 	});
 
-	test('tick handler is called with a flag', (done) => {
-		let odd  = 0;
-		let even = 0;
-
-		const timer = new Timer(THREE_SECONDS, () => {
-			expect(odd).toEqual(3);
-			expect(even).toEqual(4);
-
-			done();
-		});
-
-		timer.onTick((isWholeSecond) => {
-			if (isWholeSecond) {
-				even++;
-			}
-			else {
-				odd++;
-			}
-		});
-
-		timer.start(0);
-		clock.runAll();
-	});
-
 	test('calls the final callback when countdown is over', () => {
 		const timer = getSpyTimer();
 
-		timer.start(0);
-		clock.runAll();
+		timer.start();
+		clock.tick(THREE_SECONDS);
 
 		expect(timer.done).toHaveBeenCalledTimes(1);
+	});
+
+	describe('tickHandler', () => {
+		test('called with param 1: boolean (isWholeSecond)', (done) => {
+			let odd  = 0;
+			let even = 0;
+
+			const timer = new Timer(THREE_SECONDS, () => {
+				expect(odd).toEqual(3);
+				expect(even).toEqual(4);
+
+				done();
+			});
+
+			timer.onTick((isWholeSecond) => {
+				expect(typeof isWholeSecond).toBe('boolean');
+
+				if (isWholeSecond) {
+					even++;
+				}
+				else {
+					odd++;
+				}
+			});
+
+			timer.start(0);
+			clock.tick(THREE_SECONDS);
+		});
+
+		test('called with param 2: number (timeLeft)', (done) => {
+			const timer = new Timer(THREE_SECONDS, () => {
+				done();
+			});
+
+			let previousTick = 0;
+
+			timer.onTick((isWholeSecond, timeLeft) => {
+				expect(typeof timeLeft).toBe('number');
+
+				const now = Date.now();
+
+				if (previousTick !== 0) {
+					// Expect increment by 500
+					expect(now - previousTick).toBeLessThanOrEqual(HALF_A_SECOND);
+					expect(now - previousTick).toBeGreaterThan(HALF_A_SECOND - 2); // 498
+				}
+
+				previousTick = now;
+			});
+
+			timer.start(0);
+
+			clock.tick(THREE_SECONDS);
+		});
 	});
 });

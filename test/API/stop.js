@@ -4,7 +4,6 @@
 const lolex = require('lolex');
 
 const {
-	Timer,
 	ALMOST_THREE_SECONDS,
 	MORE_THAN_THREE_SECONDS,
 	getSpyTimer,
@@ -14,10 +13,13 @@ describe('.stop()', () => {
 	let clock;
 
 	beforeEach(() => {
-		clock = lolex.install();
+		clock = lolex.install({
+			shouldAdvanceTime: true,
+		});
 	});
 
 	afterEach(() => {
+		clock.reset();
 		clock.uninstall();
 	});
 
@@ -30,7 +32,7 @@ describe('.stop()', () => {
 	});
 
 	test('stops counting down', () => {
-		const timer = new Timer().start().stop();
+		const timer = getSpyTimer().start().stop();
 
 		clock.runAll();
 
@@ -38,7 +40,7 @@ describe('.stop()', () => {
 	});
 
 	test('does not call the final callback', () => {
-		const timer = getSpyTimer().start();
+		const timer = getSpyTimer().start(0);
 
 		clock.tick(ALMOST_THREE_SECONDS);
 		timer.stop();

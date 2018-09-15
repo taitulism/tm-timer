@@ -1,5 +1,5 @@
 /* eslint-env jest */
-/* eslint-disable max-lines-per-function */
+/* eslint-disable max-lines-per-function, max-statements */
 
 const lolex = require('lolex');
 
@@ -13,10 +13,13 @@ describe('.reset()', () => {
 	let clock;
 
 	beforeEach(() => {
-		clock = lolex.install();
+		clock = lolex.install({
+			shouldAdvanceTime: true,
+		});
 	});
 
 	afterEach(() => {
+		clock.reset();
 		clock.uninstall();
 	});
 
@@ -31,17 +34,15 @@ describe('.reset()', () => {
 		test('start counting down with the same duration', () => {
 			const timer = getSpyTimer();
 
-			timer.start();
+			timer.start(0);
 
 			clock.tick(ALMOST_THREE_SECONDS);
-
-			timer.reset();
-
+			timer.reset(ALMOST_THREE_SECONDS);
 			clock.tick(ALMOST_THREE_SECONDS);
 
-			expect(timer.done).not.toHaveBeenCalled();
+			expect(timer.done).not.toBeCalled();
 			clock.tick(50);
-			expect(timer.done).toHaveBeenCalled();
+			expect(timer.done).toBeCalled();
 		});
 	});
 
@@ -49,20 +50,19 @@ describe('.reset()', () => {
 		test('reset the timer', () => {
 			const timer = getSpyTimer();
 
-			timer.start();
+			timer.start(0);
 
 			clock.tick(ALMOST_THREE_SECONDS);
+
 			timer.stop();
 			timer.reset();
-
-			clock.tick(MORE_THAN_THREE_SECONDS);
-
-			timer.start();
+			timer.start(ALMOST_THREE_SECONDS);
 
 			clock.tick(ALMOST_THREE_SECONDS);
-			expect(timer.done).not.toHaveBeenCalled();
+
+			expect(timer.done).not.toBeCalled();
 			clock.tick(50);
-			expect(timer.done).toHaveBeenCalled();
+			expect(timer.done).toBeCalled();
 		});
 	});
 });

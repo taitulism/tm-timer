@@ -1,37 +1,65 @@
 const Ticker = require('tm-ticker');
 
 const HALF_A_SECOND = 500;
+const START_TICK = 1;
 const getNow = Date.now;
 
 /*
  * Private method. Called with a Timer instance as context of `this`.
  */
 function tickHandler () {
-	this.tickFn && this.tickFn(this.isWholeSecond);
+	const timeLeft = getTimeLeft(this.ticksLeft);
+
+	this.tickFn && this.tickFn(this.isWholeSecond, timeLeft);
 
 	this.isWholeSecond = !this.isWholeSecond;
+	this.ticksLeft--;
+
+	if (this.ticksLeft <= 0) {
+		end(this);
+	}
 }
+
+function end (timer) {
+	timer.stop();
+	timer.done && timer.done();
+}
+
+function getTimeLeft (ticksLeft) {
+	return (ticksLeft - START_TICK) * HALF_A_SECOND;
+}
+
+function convertDurationToTicks (duration) {
+	return (duration / HALF_A_SECOND) + START_TICK;
+}
+
+function hasTicksLeft (timer) {
+	return timer.ticksLeft && timer.ticksLeft >= 0;
+}
+
 
 class Timer {
 	constructor (duration, whenDone) {
-		this.ticker = new Ticker(HALF_A_SECOND, () => {
-			tickHandler.call(this);
-		});
-
+		this.isRunning = false;
 		this.isWholeSecond = true;
-		this.ref = null;
+		this.ticksLeft = null;
+		this.tickFn = null;
 
 		duration && this.set(duration);
 		whenDone && this.whenDone(whenDone);
 
-		this.tickFn = null;
-		this.halfSecFn = null;
+		this.ticker = new Ticker(HALF_A_SECOND, tickHandler.bind(this));
 	}
 
 	set (duration) {
-		this.duration = typeof duration === 'number'
-			? duration
-			: null;
+		if (typeof duration === 'number') {
+			this.duration = duration;
+			this.ticksLeft = convertDurationToTicks(duration);
+		}
+		else {
+			this.duration = null;
+			this.ticksLeft = null;
+		}
 
 		return this;
 	}
@@ -53,16 +81,11 @@ class Timer {
 	}
 
 	start (now = getNow()) {
-		if (this.isRunning) return;
+		if (this.isRunning || !hasTicksLeft(this)) return;
 
 		this.isRunning = true;
 
 		this.ticker.start(now);
-
-		this.ref = setTimeout(() => {
-			this.stop(now + this.duration);
-			this.done && this.done();
-		}, this.duration);
 
 		return this;
 	}
@@ -74,16 +97,14 @@ class Timer {
 
 		this.ticker.stop(now);
 
-		clearTimeout(this.ref);
-
-		this.ref = null;
-
 		return this;
 	}
 
 	reset (now = getNow()) {
-		this.ticker.reset(now);
 		this.isWholeSecond = true;
+		this.ticksLeft = convertDurationToTicks(this.duration);
+
+		this.ticker.reset(now);
 
 		if (this.isRunning) {
 			this.stop(now);

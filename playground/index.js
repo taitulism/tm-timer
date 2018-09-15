@@ -2,24 +2,22 @@
 
 const Timer = require('../');
 
-const myTimer = new Timer();
-
- let counter = 0;
-
-myTimer.onTick((bool) => {
-	console.log('tick', bool, counter++);
-});
-
-myTimer.whenDone(() => {
+const myTimer = new Timer(5000, () => {
 	console.log('*** Done ***');
 });
 
-myTimer.set(10000)
+let counter = 0;
+
+myTimer.onTick((isWholeSecondTick, timeLeft) => {
+	if (!isWholeSecondTick) {
+		return;
+	}
+	console.log('tick',  counter++, timeLeft);
+});
 
 myTimer.start();
 
-setTimeout(() => {
-	console.log('reset');
-	counter = 0;
-	myTimer.reset();
-}, 3500);
+// setTimeout(() => {
+// 	myTimer.stop();
+// 	counter = 0;
+// }, 3500);
