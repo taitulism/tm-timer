@@ -1,5 +1,9 @@
 /* eslint-env jest */
-/* eslint-disable max-statements, max-lines-per-function */
+/* eslint-disable
+	max-statements,
+	max-lines-per-function,
+	no-magic-numbers
+*/
 
 const lolex = require('lolex');
 
@@ -71,7 +75,7 @@ describe('.start()', () => {
 
 	describe('tickHandler', () => {
 		test('called with param 1: boolean (isWholeSecond)', (done) => {
-			let odd  = 0;
+			let odd = 0;
 			let even = 0;
 
 			const timer = new Timer(THREE_SECONDS, () => {

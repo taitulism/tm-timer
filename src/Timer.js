@@ -52,7 +52,9 @@ class Timer {
 	}
 
 	start (now = getNow()) {
-		if (this.isRunning || !hasTicksLeft(this)) return;
+		if (this.isRunning || !hasTicksLeft(this)) {
+			return this;
+		}
 
 		this.isRunning = true;
 
@@ -62,7 +64,9 @@ class Timer {
 	}
 
 	stop (now = getNow()) {
-		if (!this.isRunning) return;
+		if (!this.isRunning) {
+			return this;
+		}
 
 		this.isRunning = false;
 

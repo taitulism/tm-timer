@@ -1,11 +1,14 @@
 /* eslint-env jest */
-/* eslint-disable max-lines-per-function, max-statements */
+/* eslint-disable
+	max-lines-per-function,
+	no-magic-numbers,
+	max-statements,
+*/
 
 const lolex = require('lolex');
 
 const {
 	ALMOST_THREE_SECONDS,
-	MORE_THAN_THREE_SECONDS,
 	getSpyTimer,
 } = require('../common');
 

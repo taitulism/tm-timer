@@ -1,4 +1,8 @@
-/* eslint-disable no-console, no-magic-numbers */
+/* eslint-disable
+	no-console,
+	no-magic-numbers,
+	capitalized-comments
+*/
 
 const Timer = require('../');
 
@@ -12,7 +16,7 @@ myTimer.onTick((isWholeSecondTick, timeLeft) => {
 	if (!isWholeSecondTick) {
 		return;
 	}
-	console.log('tick',  counter++, timeLeft);
+	console.log('tick', counter++, timeLeft);
 });
 
 myTimer.start();

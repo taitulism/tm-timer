@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 const Timer = require('../');
 
 const HALF_A_SECOND = 500;
@@ -9,7 +11,7 @@ const emptyFn = () => {}; // eslint-disable-line no-empty-function
 
 function getSpyTimer () {
 	const finalSpy = jest.fn();
-	const tickSpy  = jest.fn();
+	const tickSpy = jest.fn();
 
 	const timer = new Timer(THREE_SECONDS);
 
