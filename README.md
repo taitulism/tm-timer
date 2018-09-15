@@ -1,4 +1,7 @@
 # TM-Timer
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/taitulism/tm-timer.svg?branch=develop)](https://travis-ci.org/taitulism/tm-timer)
+
 A simple count-down Timer class, based on [TM-Ticker](https://github.com/taitulism/ticker) (no GUI)
 
 
