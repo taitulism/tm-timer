@@ -1,66 +1,225 @@
-# Timer
-**PROJECT STATUS:** Just got started. Work in progress...  
-**CURRENT VERSION:** `0.0.0`  
-**FOLLOWS SEMVER:** Not yet.  
-**DEFAULT BRANCH:** `develop`  
-
-## Timer
-An accurate simple Timer (count down) class based on [Ticker](https://github.com/taitulism/ticker) (no GUI)
+# TM-Timer
+A simple count-down Timer class, based on [TM-Ticker](https://github.com/taitulism/ticker) (no GUI)
 
 
 ## Installation
-> **Work in progress...**
+```sh
+$ npm install tm-timer
+```
 ```js
-import Timer from 'Timer';
+import Timer from 'tm-timer';
 // or
-const Timer = require('Timer');
+const Timer = require('tm-timer');
 ```
 
 
-## Usage
-Create:
+## TL;DR
+[Jump to API](#api)
+
+#### Create:
+```js
+// construct & config
+const t = new Timer(duration, finalCallback)
+
+// or just construct (and config later)
+const t = new Timer()
+```
+
+
+#### Config:
+```js
+t.set(duration)
+t.whenDone(finalCallback)
+t.onTick(tickHandler)
+```
+
+
+#### Use:
+> `now` is optional
+```js
+ t.start(now)
+```
+```js
+ t.stop(now)
+```
+```js
+ t.reset(now)
+```
+```js
+ t.destroy()
+```
+
+
+
+## API
+------
+
+## Constructor
 ```js 
+const t = new Timer(duration, finalCallback);
+```
+* `duration` [number, optional*]  
+\* *Required to start. optional at construction.*  
+Countdown in milliseconds. Pass `null` to set the callback alone.
+
+* `finalCallback` [function, optional]  
+The function you want to call when countdown is over.
+
+Example:
+```js
 const fiveMinutes = 5 * 60 * 1000;
 
-const t = new Timer(fiveMinutes);
-```
-Use:
-```js
-// bind events
- t.onTick(callback_A) // every second
- t.onEnd(callback_B)
- 
- // future feature - blink your colons here (04:20)
- t.onHalfTick(callback_C)
-```
-```js
- t.start()
-```
-```js
- t.stop()
-```
-```js
- t.reset()
-```
-
-### Event callbacks
-**`.onTick(callback)`**
-* `callback` (function, required) - Runs every second. The first tick happens on start, synchronously, before any timeout. The callback function recieves two arguments:
-    * `clockValues` - Time left array: `[hours, minutes, seconds]`.
-    * `timeLeft` - Time left in milliseconds.
-    
-```js
-t.onTick((clockValues, timeLeft) => {
-    console.log(clockValues); //  | [0, 0, 5] | [0, 0, 4] | [0, 0, 3] |...
-    console.log(timeLeft);    //  | 5000      | 4000      | 3000      |...
+const t = new Timer(fiveMinutes, () => {
+    console.log('Game Over');
 });
 ```
 
-**`.onEnd(callback)`**
-* `callback` (function, required) - Runs when timer finishes. No arguments.
+## Configuration
+> **A Timer instance won't tick unless it has a duration.**  
+
+You can set the timer's duration and final callback on construction or later with the following methods which are very self explanatory:
 
 ```js
-t.onEnd(() => {
+const myTimer = new Timer();
+
+myTimer.set(fiveMinutes)
+myTimer.whenDone(finalCallback)
+myTimer.onTick(myTickHandler)
+```
+
+### **`.set(duration)`**
+* `duration` [number, required]  
+Set the total time in milliseconds to count down to.
+
+```js
+const fiveMinutes = 5 * 60 * 1000;
+
+myTimer.set(fiveMinutes);
+```
+
+### **`.whenDone(finalCallback)`**
+* `finalCallback` [function, required]  
+Runs when timer finishes. Gets no arguments.
+
+```js
+myTimer.whenDone(() => {
     console.log("Time's Up!");
 });
+```
+
+### **`.onTick(callback)`**
+As the timer counts down, it ticks every 500ms (twice every second).  
+Use when you can bind a tick handler function.  
+The first tick happens on start, synchronously, before any timeout.  
+* `callback` [function, optional]  
+The callback function recieves two arguments:
+    1. `isBigTick` [boolean]  
+        Equals `true` on "big" ticks (a whole second: 0, 1000, 2000, 3000 etc.)  
+        Equals `false` on "small" ticks (half a second: 500, 1500, 2500, 3500 etc.)  
+        For example, you could update your clock's digits on big ticks and blink the clock's colons on small ticks (04:20).
+
+    2. `timeLeft` [number]  
+    Time left in milliseconds.
+
+Example:    
+```js
+myTimer.onTick((isBigTick, timeLeft) => {
+    console.log(isBigTick); //  | true | false | true | false |...
+    console.log(timeLeft);  //  | 5000 | 4500  | 4000 | 3500  |...
+
+    /*
+    * NOTE:
+    * The following functions are made up and are not part of TM-Timer.
+    */
+    if (isBigTick) {
+        updateClock(timeLeft)
+        showColons() // (04:20)
+    }
+    else {
+        hideColons() // (04 20)
+    }
+});
+```
+
+
+## Methods
+All methods can get called with a `timestamp` argument. Pass in a current timestamp when you need to sync time with other modules.
+
+* `timestamp` (ms, number, optional) - The timestamp to be considered as the method's execution time.
+
+## .start()
+Start counting down.
+
+Calls the first tick (if a tick handler is set with `.onTick(fn)`).  
+When called after a `.stop()` it acts as a "resume" function. There will be no start-tick in this case. 
+```js
+// optional
+const timestamp = Date.now()
+
+myTimer.start(timestamp)
+```
+
+
+## .stop()
+Stop/Pause counting down.
+
+Run `.start()` to resume.
+
+```js
+const myTimer = new Timer(fiveMinutes, gameOver)
+
+myTimer.start()
+
+// Take a break
+myTimer.stop()
+
+// Resume
+myTimer.start()
+```
+
+
+## .reset()
+Reset the countdown with full original duration.
+
+Can be called whether the timer is running or not. When called while running, it acts like a "restart" and doesn't stop the timer.
+
+```js
+const myTimer = new Timer(fiveMinutes, gameOver)
+
+myTimer.start()
+
+/* after 2 minutes */
+myTimer.reset() // re-start counting down five minutes. No stop.
+```
+
+```js
+const myTimer = new Timer(fiveMinutes, gameOver)
+
+myTimer.start()
+
+/* after 2 minutes */
+myTimer.stop()
+myTimer.reset()
+myTimer.start() // start counting down five minutes.
+```
+
+## .destroy()
+Destroy the timer. Removes duration and bound callbacks.  
+
+>Cannot be used again unless re-configured.
+
+```js
+const myTimer = new Timer(fiveMinutes, gameOver)
+
+myTimer.start()
+myTimer.destroy()
+
+myTimer.set(fiveMinutes)
+myTimer.whenDone(gameOver)
+```
+
+## Playground
+-------------
+```sh
+$ npm run playground
 ```
