@@ -84,6 +84,15 @@ class Timer {
 
 		return this;
 	}
+
+	destroy () {
+		this.stop();
+		this.reset();
+
+		this.duration = null;
+		this.ticksLeft = null;
+		this.tickFn = null;
+	}
 }
 
 module.exports = Timer;
