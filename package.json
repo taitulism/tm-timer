@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "tdd": "jest --watch",
-    "lint": "eslint ./index.js src playground",
+    "lint": "eslint ./index.js src test playground",
     "playground": "node ./playground/index.js"
   },
   "repository": {
