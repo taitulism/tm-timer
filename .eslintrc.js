@@ -67,7 +67,10 @@ module.exports = {
         "lines-between-class-members": "error",
         "max-classes-per-file": "error",
         "max-depth": "error",
-        "max-len": "error",
+        "max-len": ["error", {
+			"code": 90,
+			"tabWidth": 4
+		}],
         "max-lines": "error",
         "max-lines-per-function": "error",
         "max-nested-callbacks": "error",
@@ -83,7 +86,9 @@ module.exports = {
             "always"
         ],
         "newline-before-return": "error",
-        "newline-per-chained-call": "error",
+        "newline-per-chained-call": ["error", {
+			"ignoreChainWithDepth": 3
+		}],
         "no-alert": "error",
         "no-array-constructor": "error",
         "no-async-promise-executor": "error",
@@ -207,7 +212,7 @@ module.exports = {
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",
-        "quote-props": "error",
+        "quote-props": ["error", "as-needed"],
         "quotes": [
             "error",
             "single"
