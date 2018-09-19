@@ -1,14 +1,14 @@
 {
   "name": "tm-timer",
-  "version": "0.0.0",
+  "version": "0.5.0",
   "description": "A simple countdown Timer class (no GUI)",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "tdd": "jest --watch",
     "lint": "eslint ./index.js src test playground",
-	"playground": "node ./playground/index.js",
-	"preversion": "npm run lint && npm test",
+    "playground": "node ./playground/index.js",
+    "preversion": "npm run lint && npm test",
     "postversion": "git push && git push --tags"
   },
   "repository": {
