@@ -7,7 +7,9 @@
     "test": "jest",
     "tdd": "jest --watch",
     "lint": "eslint ./index.js src test playground",
-    "playground": "node ./playground/index.js"
+	"playground": "node ./playground/index.js",
+	"preversion": "npm run lint && npm test",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
