@@ -1,21 +1,27 @@
-const Timer = require('../Timer');
-	
-const myTimer = new Timer(10000);
+/* eslint-disable
+	no-console,
+	no-magic-numbers,
+	capitalized-comments
+*/
 
-myTimer.onTick((countDown, timeLeft) => {
-	const clock = `${countDown[0]}:${countDown[1]}:${countDown[2]}`;
-	console.log('timer tick', clock, timeLeft);
+const Timer = require('../');
+
+const myTimer = new Timer(5000, () => {
+	console.log('*** Done ***');
 });
 
-myTimer.onEnd(() => {
-	console.log('*** Done ***');
+let counter = 0;
+
+myTimer.onTick((isWholeSecondTick, timeLeft) => {
+	if (!isWholeSecondTick) {
+		return;
+	}
+	console.log('tick', counter++, timeLeft);
 });
 
 myTimer.start();
 
-/*
-    // Somewhere down the road:
-    myTimer.pause();
-    myTimer.reset();
-    myTimer.destroy();
-*/
+// setTimeout(() => {
+// 	myTimer.stop();
+// 	counter = 0;
+// }, 3500);
