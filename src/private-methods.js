@@ -7,9 +7,9 @@ const HALF_A_SECOND = 500;
 function tickHandler () {
 	const timeLeft = getTimeLeft(this.ticksLeft);
 
-	this.tickFn && this.tickFn(this.isWholeSecond, timeLeft);
+	this.tickFn && this.tickFn(this.isBigTick, timeLeft);
 
-	this.isWholeSecond = !this.isWholeSecond;
+	this.isBigTick = !this.isBigTick;
 	this.ticksLeft--;
 
 	if (this.ticksLeft <= 0) {

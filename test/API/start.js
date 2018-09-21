@@ -67,7 +67,7 @@ describe('.start()', () => {
 	});
 
 	describe('tickHandler', () => {
-		test('called with param 1: boolean (isWholeSecond)', (done) => {
+		test('called with param 1: boolean (isBigTick)', (done) => {
 			let odd = 0;
 			let even = 0;
 
@@ -78,10 +78,10 @@ describe('.start()', () => {
 				done();
 			});
 
-			timer.onTick((isWholeSecond) => {
-				expect(typeof isWholeSecond).toBe('boolean');
+			timer.onTick((isBigTick) => {
+				expect(typeof isBigTick).toBe('boolean');
 
-				if (isWholeSecond) {
+				if (isBigTick) {
 					even++;
 				}
 				else {
@@ -100,7 +100,7 @@ describe('.start()', () => {
 
 			let previousTick = 0;
 
-			timer.onTick((isWholeSecond, timeLeft) => {
+			timer.onTick((isBigTick, timeLeft) => {
 				expect(typeof timeLeft).toBe('number');
 
 				const now = Date.now();

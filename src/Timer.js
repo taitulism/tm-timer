@@ -12,7 +12,7 @@ const getNow = Date.now;
 class Timer {
 	constructor (duration, whenDone) {
 		this.isRunning = false;
-		this.isWholeSecond = true;
+		this.isBigTick = true;
 		this.ticksLeft = null;
 		this.tickFn = null;
 
@@ -76,7 +76,7 @@ class Timer {
 	}
 
 	reset (now = getNow()) {
-		this.isWholeSecond = true;
+		this.isBigTick = true;
 		this.ticksLeft = convertDurationToTicks(this.duration);
 
 		this.ticker.reset(now);

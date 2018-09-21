@@ -12,8 +12,8 @@ const myTimer = new Timer(5000, () => {
 
 let counter = 0;
 
-myTimer.onTick((isWholeSecondTick, timeLeft) => {
-	if (!isWholeSecondTick) {
+myTimer.onTick((isBigTick, timeLeft) => {
+	if (!isBigTick) {
 		return;
 	}
 	console.log('tick', counter++, timeLeft);
