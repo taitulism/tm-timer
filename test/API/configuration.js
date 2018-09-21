@@ -1,6 +1,3 @@
-/* eslint-env jest */
-/* eslint-disable max-lines-per-function */
-
 const {
 	Timer,
 	THREE_SECONDS,

@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 const {
 	Timer,
 	THREE_SECONDS,

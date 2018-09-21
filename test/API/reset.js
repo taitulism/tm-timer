@@ -1,10 +1,3 @@
-/* eslint-env jest */
-/* eslint-disable
-	max-lines-per-function,
-	no-magic-numbers,
-	max-statements,
-*/
-
 const lolex = require('lolex');
 
 const {
