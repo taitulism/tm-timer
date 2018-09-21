@@ -7,7 +7,7 @@ const {
 } = require('./private-methods');
 
 const HALF_A_SECOND = 500;
-const getNow = Date.now;
+const getNow = () => Date.now();
 
 class Timer {
 	constructor (duration, whenDone) {
