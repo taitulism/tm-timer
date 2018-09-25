@@ -35,8 +35,20 @@ function hasTicksLeft (timer) {
 	return timer.ticksLeft && timer.ticksLeft >= 0;
 }
 
+function memoize (fn) {
+	const memo = Object.create(null);
+
+	return function memoFn (...args) {
+		if (!memo[args]) {
+			memo[args] = fn(args);
+		}
+
+		return memo[args];
+	};
+}
+
 module.exports = {
 	tickHandler,
-	convertDurationToTicks,
 	hasTicksLeft,
+	convertDurationToTicks: memoize(convertDurationToTicks),
 };
