@@ -13,6 +13,7 @@ class Timer {
 	constructor (duration, whenDone) {
 		this.isRunning = false;
 		this.isBigTick = true;
+		this.isOk = true;
 		this.ticksLeft = null;
 		this.tickFn = null;
 
@@ -52,7 +53,7 @@ class Timer {
 	}
 
 	start (now = getNow()) {
-		if (this.isRunning || !hasTicksLeft(this)) {
+		if (this.isRunning || !hasTicksLeft(this) || !this.isOk) {
 			return this;
 		}
 
@@ -90,12 +91,9 @@ class Timer {
 	}
 
 	destroy () {
-		this.stop();
-		this.reset();
+		this.stop().reset();
 
-		this.duration = null;
-		this.ticksLeft = null;
-		this.tickFn = null;
+		this.isOk = false;
 	}
 }
 
