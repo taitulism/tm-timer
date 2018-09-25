@@ -16,7 +16,6 @@ describe('.reset()', () => {
 
 	afterEach(() => {
 		clock.reset();
-		clock.uninstall();
 	});
 
 	test('return instance', () => {

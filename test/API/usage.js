@@ -3,4 +3,5 @@ describe('usage', () => {
 	require('./start');
 	require('./stop');
 	require('./reset');
+	require('./destroy');
 });
