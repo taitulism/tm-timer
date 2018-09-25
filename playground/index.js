@@ -8,6 +8,7 @@ const Timer = require('../');
 
 const myTimer = new Timer(5000, () => {
 	console.log('*** Done ***');
+	myTimer.start();
 });
 
 let counter = 0;

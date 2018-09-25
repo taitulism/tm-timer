@@ -19,6 +19,7 @@ function tickHandler () {
 
 function end (timer) {
 	timer.stop();
+	timer.reset();
 	timer.done && timer.done();
 }
 
