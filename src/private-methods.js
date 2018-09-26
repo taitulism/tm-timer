@@ -1,11 +1,22 @@
-const START_TICK = 1;
-const HALF_A_SECOND = 500;
+const {
+	START_TICK,
+	HALF_A_SECOND,
+	memoize
+} = require('./common');
+
+const convertTicksToDuration = memoize((ticksLeft) => {
+	return ticksLeft * HALF_A_SECOND;
+});
+
+const convertDurationToTicks = memoize((duration) => {
+	return (duration / HALF_A_SECOND) + START_TICK;
+});
 
 /*
  * Private method. Called with a Timer instance as context of `this`.
  */
 function tickHandler () {
-	const timeLeft = getTimeLeft(this.ticksLeft);
+	const timeLeft = convertTicksToDuration(this.ticksLeft - START_TICK);
 
 	this.tickFn && this.tickFn(this.isBigTick, timeLeft);
 
@@ -23,32 +34,13 @@ function end (timer) {
 	timer.done && timer.done();
 }
 
-function getTimeLeft (ticksLeft) {
-	return (ticksLeft - START_TICK) * HALF_A_SECOND;
-}
-
-function convertDurationToTicks (duration) {
-	return (duration / HALF_A_SECOND) + START_TICK;
-}
-
 function hasTicksLeft (timer) {
 	return timer.ticksLeft && timer.ticksLeft >= 0;
-}
-
-function memoize (fn) {
-	const memo = Object.create(null);
-
-	return function memoFn (...args) {
-		if (!memo[args]) {
-			memo[args] = fn(args);
-		}
-
-		return memo[args];
-	};
 }
 
 module.exports = {
 	tickHandler,
 	hasTicksLeft,
-	convertDurationToTicks: memoize(convertDurationToTicks),
+	convertDurationToTicks,
+	convertTicksToDuration,
 };
