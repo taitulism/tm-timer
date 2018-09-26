@@ -37,4 +37,8 @@ describe('Public API', () => {
 	test('has a method .reset()', () => {
 		expect(typeof timer.reset).toEqual('function');
 	});
+
+	test('has a method .destroy()', () => {
+		expect(typeof timer.destroy).toEqual('function');
+	});
 });

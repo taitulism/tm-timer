@@ -20,5 +20,5 @@ myTimer.onTick((isBigTick, timeLeft) => {
 myTimer.start();
 
 setTimeout(() => {
-	myTimer.set(5000);
+	myTimer.getTimeLeft();
 }, 3000);
