@@ -16,6 +16,8 @@ class Timer {
 		this.isOk = true;
 		this.ticksLeft = null;
 		this.tickFn = null;
+		this.done = null;
+		this.duration = null;
 
 		duration && this.set(duration);
 		whenDone && this.whenDone(whenDone);
@@ -28,18 +30,14 @@ class Timer {
 			this.duration = duration;
 			this.ticksLeft = convertDurationToTicks(duration);
 		}
-		else {
-			this.duration = null;
-			this.ticksLeft = null;
-		}
 
 		return this;
 	}
 
 	whenDone (callback) {
-		this.done = typeof callback === 'function'
-			? callback
-			: null;
+		if (typeof callback === 'function') {
+			this.done =	callback;
+		}
 
 		return this;
 	}
