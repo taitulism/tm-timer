@@ -8,21 +8,17 @@ const Timer = require('../');
 
 const myTimer = new Timer(5000, () => {
 	console.log('*** Done ***');
-	myTimer.start();
 });
-
-let counter = 0;
 
 myTimer.onTick((isBigTick, timeLeft) => {
 	if (!isBigTick) {
 		return;
 	}
-	console.log('tick', counter++, timeLeft);
+	console.log('tick', timeLeft, myTimer.ticksLeft);
 });
 
 myTimer.start();
 
-// setTimeout(() => {
-// 	myTimer.stop();
-// 	counter = 0;
-// }, 3500);
+setTimeout(() => {
+	myTimer.set(5000);
+}, 3000);

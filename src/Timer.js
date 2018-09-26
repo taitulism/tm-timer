@@ -26,12 +26,20 @@ class Timer {
 	}
 
 	set (duration) {
+		const calledWhileRunning = this.isRunning;
+
+		if (calledWhileRunning) {
+			this.stop().reset();
+		}
+
 		if (typeof duration === 'number') {
 			this.duration = duration;
 			this.ticksLeft = convertDurationToTicks(duration);
 		}
 
-		return this;
+		return calledWhileRunning
+			? this.start()
+			: this;
 	}
 
 	whenDone (callback) {
