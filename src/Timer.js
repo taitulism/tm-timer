@@ -1,9 +1,12 @@
 const Ticker = require('tm-ticker');
 
+const {START_TICK} = require('./common');
+
 const {
 	tickHandler,
-	convertDurationToTicks,
 	hasTicksLeft,
+	convertDurationToTicks,
+	convertTicksToDuration,
 } = require('./private-methods');
 
 const HALF_A_SECOND = 500;
@@ -68,6 +71,13 @@ class Timer {
 		this.ticker.start(now);
 
 		return this;
+	}
+
+	getTimeLeft () {
+		const rounded = convertTicksToDuration(this.ticksLeft - START_TICK);
+		const toNextTick = this.ticker.getTimeLeft();
+
+		return rounded + toNextTick;
 	}
 
 	stop (now = getNow()) {

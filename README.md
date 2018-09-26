@@ -43,6 +43,9 @@ t.onTick(tickHandler)
  t.start(now)
 ```
 ```js
+ t.getTimeLeft()
+```
+```js
  t.stop(now)
 ```
 ```js
@@ -160,6 +163,19 @@ When called after a `.stop()` it acts as a "resume" function. There will be no s
 const timestamp = Date.now()
 
 myTimer.start(timestamp)
+```
+
+
+## .getTimeLeft()
+Returns how many milliseconds left.
+
+```js
+const myTimer = new Timer(3000, callback)
+
+myTimer.start()
+
+// after 2480 ms (for example)
+myTimer.getTimeLeft() // --> 520
 ```
 
 

@@ -30,6 +30,10 @@ describe('Public API', () => {
 		expect(typeof timer.start).toEqual('function');
 	});
 
+	test('has a method .getTimeLeft()', () => {
+		expect(typeof timer.getTimeLeft).toEqual('function');
+	});
+
 	test('has a method .stop()', () => {
 		expect(typeof timer.stop).toEqual('function');
 	});
