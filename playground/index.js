@@ -6,7 +6,7 @@
 
 const Timer = require('../');
 
-const myTimer = new Timer(5000, () => {
+const myTimer = new Timer(10000, () => {
 	console.log('*** Done ***');
 });
 
@@ -20,5 +20,5 @@ myTimer.onTick((isBigTick, timeLeft) => {
 myTimer.start();
 
 setTimeout(() => {
-	myTimer.getTimeLeft();
-}, 3000);
+	console.log(myTimer.getTimeLeft());
+}, 2200);

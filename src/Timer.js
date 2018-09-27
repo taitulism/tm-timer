@@ -1,7 +1,5 @@
 const Ticker = require('tm-ticker');
 
-const {START_TICK} = require('./common');
-
 const {
 	tickHandler,
 	hasTicksLeft,
@@ -74,7 +72,7 @@ class Timer {
 	}
 
 	getTimeLeft () {
-		const rounded = convertTicksToDuration(this.ticksLeft - START_TICK);
+		const rounded = convertTicksToDuration(this.ticksLeft);
 		const toNextTick = this.ticker.getTimeLeft();
 
 		return rounded + toNextTick;
