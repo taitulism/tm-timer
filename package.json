@@ -36,6 +36,6 @@
     "lolex": "^2.7.4"
   },
   "dependencies": {
-    "tm-ticker": "^1.2.0"
+    "tm-ticker": "^1.5.0"
   }
 }
