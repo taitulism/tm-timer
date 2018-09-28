@@ -40,7 +40,7 @@ describe('.start()', () => {
 		timer.onTick(spy);
 
 		expect(spy).toHaveBeenCalledTimes(0);
-		timer.start(0);
+		timer.start();
 		expect(spy).toHaveBeenCalledTimes(1);
 		clock.tick(HALF_A_SECOND); // 500
 		expect(spy).toHaveBeenCalledTimes(2);
@@ -88,7 +88,7 @@ describe('.start()', () => {
 				}
 			});
 
-			timer.start(0);
+			timer.start();
 			clock.tick(THREE_SECONDS);
 		});
 
@@ -113,7 +113,7 @@ describe('.start()', () => {
 				previousTick = now;
 			});
 
-			timer.start(0);
+			timer.start();
 
 			clock.tick(THREE_SECONDS);
 		});

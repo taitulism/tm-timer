@@ -12,7 +12,7 @@ describe('Configuration', () => {
 	});
 
 	afterEach(() => {
-		timer = null;
+		timer.destroy();
 	});
 
 	describe('.set(duration)', () => {

@@ -11,7 +11,7 @@ describe('Public API', () => {
 	});
 
 	afterEach(() => {
-		timer = null;
+		timer.destroy();
 	});
 
 	test('has a method .set()', () => {

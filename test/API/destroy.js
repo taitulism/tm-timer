@@ -10,9 +10,7 @@ describe('.destroy()', () => {
 	let clock;
 
 	beforeEach(() => {
-		clock = lolex.install({
-			shouldAdvanceTime: true,
-		});
+		clock = lolex.install();
 	});
 
 	afterEach(() => {

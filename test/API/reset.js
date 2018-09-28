@@ -9,9 +9,7 @@ describe('.reset()', () => {
 	let clock;
 
 	beforeEach(() => {
-		clock = lolex.install({
-			shouldAdvanceTime: true,
-		});
+		clock = lolex.install();
 	});
 
 	afterEach(() => {
@@ -29,7 +27,7 @@ describe('.reset()', () => {
 		test('start counting down with the same duration', () => {
 			const timer = getSpyTimer();
 
-			timer.start(0);
+			timer.start();
 
 			clock.tick(ALMOST_THREE_SECONDS);
 			timer.reset(ALMOST_THREE_SECONDS);
@@ -45,7 +43,7 @@ describe('.reset()', () => {
 		test('reset the timer', () => {
 			const timer = getSpyTimer();
 
-			timer.start(0);
+			timer.start();
 
 			clock.tick(ALMOST_THREE_SECONDS);
 
