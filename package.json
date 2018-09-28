@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "tdd": "jest --watch",
+    "dev": "jest --watch",
     "lint": "eslint ./index.js src test playground",
     "playground": "node ./playground/index.js",
     "preversion": "npm run lint && npm test",
