@@ -30,7 +30,7 @@ module.exports = {
         "array-callback-return": "error",
         "array-element-newline": ["error", {"minItems": 4}],
         "arrow-body-style": "error",
-        "arrow-parens": "error",
+        "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
         "arrow-spacing": "error",
         "block-scoped-var": "error",
         "block-spacing": "error",
