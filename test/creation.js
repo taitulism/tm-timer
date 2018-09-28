@@ -32,4 +32,22 @@ describe('Creation', () => {
 			expect(timer.done).toEqual(emptyFn);
 		});
 	});
+
+	describe('with an invalid duration or final callback', () => {
+		test('throws an error on invalid duration', () => {
+			function wrapper () {
+				new Timer('not a number');
+			}
+
+			expect(wrapper).toThrow(Error);
+		});
+
+		test('throws an error on invalid final callback', () => {
+			function wrapper () {
+				new Timer(1000, 'not a function');
+			}
+
+			expect(wrapper).toThrow(Error);
+		});
+	});
 });

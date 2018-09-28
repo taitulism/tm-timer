@@ -27,6 +27,8 @@ class Timer {
 	}
 
 	set (duration) {
+		validateDuration(duration);
+
 		const calledWhileRunning = this.isRunning;
 
 		if (calledWhileRunning) {
@@ -44,6 +46,8 @@ class Timer {
 	}
 
 	whenDone (callback) {
+		validateFinalCallback(callback);
+
 		if (typeof callback === 'function') {
 			this.done =	callback;
 		}
@@ -52,6 +56,8 @@ class Timer {
 	}
 
 	onTick (fn) {
+		validateTickCallback(fn);
+
 		if (typeof fn === 'function') {
 			this.tickFn = fn;
 		}
@@ -112,3 +118,21 @@ class Timer {
 }
 
 module.exports = Timer;
+
+function validateDuration (duration) {
+	if (typeof duration !== 'number') {
+		throw new Error('Timer duration should be a number (of milliseconds)');
+	}
+}
+
+function validateFinalCallback (callback) {
+	if (typeof callback !== 'function') {
+		throw new Error('Timer callback must be a function');
+	}
+}
+
+function validateTickCallback (callback) {
+	if (typeof callback !== 'function') {
+		throw new Error('Timer tick must be a function');
+	}
+}

@@ -55,5 +55,13 @@ describe('Configuration', () => {
 
 			expect(returnValue).toBe(timer);
 		});
+
+		test('throws an error on invalid tick callback', () => {
+			function wrapper () {
+				timer.onTick('not a function');
+			}
+
+			expect(wrapper).toThrow(Error);
+		});
 	});
 });
