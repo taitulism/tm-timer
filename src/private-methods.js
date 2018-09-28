@@ -1,15 +1,10 @@
 const {
 	HALF_A_SECOND,
-	memoize
+	memoize,
 } = require('./common');
 
-const convertTicksToDuration = memoize((ticksLeft) => {
-	return ticksLeft * HALF_A_SECOND;
-});
-
-const convertDurationToTicks = memoize((duration) => {
-	return duration / HALF_A_SECOND;
-});
+const convertDurationToTicks = duration => duration / HALF_A_SECOND;
+const convertTicksToDuration = ticksLeft => ticksLeft * HALF_A_SECOND;
 
 /*
  * Private method. Called with a Timer instance as context of `this`.
@@ -40,6 +35,6 @@ function hasTicksLeft (timer) {
 module.exports = {
 	tickHandler,
 	hasTicksLeft,
-	convertDurationToTicks,
 	convertTicksToDuration,
+	convertDurationToTicks: memoize(convertDurationToTicks),
 };
