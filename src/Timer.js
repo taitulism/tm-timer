@@ -2,19 +2,23 @@ const Ticker = require('tm-ticker');
 
 const {
 	tickHandler,
-	convertDurationToTicks,
 	hasTicksLeft,
+	convertDurationToTicks,
+	convertTicksToDuration,
 } = require('./private-methods');
 
 const HALF_A_SECOND = 500;
-const getNow = Date.now;
+const getNow = () => Date.now();
 
 class Timer {
 	constructor (duration, whenDone) {
 		this.isRunning = false;
-		this.isWholeSecond = true;
+		this.isBigTick = true;
+		this.isOk = true;
 		this.ticksLeft = null;
 		this.tickFn = null;
+		this.done = null;
+		this.duration = null;
 
 		duration && this.set(duration);
 		whenDone && this.whenDone(whenDone);
@@ -23,27 +27,37 @@ class Timer {
 	}
 
 	set (duration) {
+		validateDuration(duration);
+
+		const calledWhileRunning = this.isRunning;
+
+		if (calledWhileRunning) {
+			this.stop().reset();
+		}
+
 		if (typeof duration === 'number') {
 			this.duration = duration;
 			this.ticksLeft = convertDurationToTicks(duration);
 		}
-		else {
-			this.duration = null;
-			this.ticksLeft = null;
-		}
 
-		return this;
+		return calledWhileRunning
+			? this.start()
+			: this;
 	}
 
 	whenDone (callback) {
-		this.done = typeof callback === 'function'
-			? callback
-			: null;
+		validateFinalCallback(callback);
+
+		if (typeof callback === 'function') {
+			this.done =	callback;
+		}
 
 		return this;
 	}
 
 	onTick (fn) {
+		validateTickCallback(fn);
+
 		if (typeof fn === 'function') {
 			this.tickFn = fn;
 		}
@@ -52,7 +66,7 @@ class Timer {
 	}
 
 	start (now = getNow()) {
-		if (this.isRunning || !hasTicksLeft(this)) {
+		if (this.isRunning || !hasTicksLeft(this) || !this.isOk) {
 			return this;
 		}
 
@@ -61,6 +75,13 @@ class Timer {
 		this.ticker.start(now);
 
 		return this;
+	}
+
+	getTimeLeft () {
+		const rounded = convertTicksToDuration(this.ticksLeft);
+		const toNextTick = this.ticker.getTimeLeft();
+
+		return rounded + toNextTick;
 	}
 
 	stop (now = getNow()) {
@@ -76,7 +97,7 @@ class Timer {
 	}
 
 	reset (now = getNow()) {
-		this.isWholeSecond = true;
+		this.isBigTick = true;
 		this.ticksLeft = convertDurationToTicks(this.duration);
 
 		this.ticker.reset(now);
@@ -90,13 +111,28 @@ class Timer {
 	}
 
 	destroy () {
-		this.stop();
-		this.reset();
+		this.stop().reset();
 
-		this.duration = null;
-		this.ticksLeft = null;
-		this.tickFn = null;
+		this.isOk = false;
 	}
 }
 
 module.exports = Timer;
+
+function validateDuration (duration) {
+	if (typeof duration !== 'number') {
+		throw new Error('Timer duration should be a number (of milliseconds)');
+	}
+}
+
+function validateFinalCallback (callback) {
+	if (typeof callback !== 'function') {
+		throw new Error('Timer callback must be a function');
+	}
+}
+
+function validateTickCallback (callback) {
+	if (typeof callback !== 'function') {
+		throw new Error('Timer tick must be a function');
+	}
+}

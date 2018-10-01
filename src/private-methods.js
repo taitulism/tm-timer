@@ -1,33 +1,31 @@
-const START_TICK = 1;
-const HALF_A_SECOND = 500;
+const {
+	HALF_A_SECOND,
+	memoize,
+} = require('./common');
+
+const convertDurationToTicks = duration => duration / HALF_A_SECOND;
+const convertTicksToDuration = ticksLeft => ticksLeft * HALF_A_SECOND;
 
 /*
  * Private method. Called with a Timer instance as context of `this`.
  */
 function tickHandler () {
-	const timeLeft = getTimeLeft(this.ticksLeft);
+	const timeLeft = convertTicksToDuration(this.ticksLeft);
 
-	this.tickFn && this.tickFn(this.isWholeSecond, timeLeft);
+	this.tickFn && this.tickFn(this.isBigTick, timeLeft);
 
-	this.isWholeSecond = !this.isWholeSecond;
+	this.isBigTick = !this.isBigTick;
 	this.ticksLeft--;
 
-	if (this.ticksLeft <= 0) {
+	if (this.ticksLeft < 0) {
 		end(this);
 	}
 }
 
 function end (timer) {
 	timer.stop();
+	timer.reset();
 	timer.done && timer.done();
-}
-
-function getTimeLeft (ticksLeft) {
-	return (ticksLeft - START_TICK) * HALF_A_SECOND;
-}
-
-function convertDurationToTicks (duration) {
-	return (duration / HALF_A_SECOND) + START_TICK;
 }
 
 function hasTicksLeft (timer) {
@@ -36,6 +34,7 @@ function hasTicksLeft (timer) {
 
 module.exports = {
 	tickHandler,
-	convertDurationToTicks,
 	hasTicksLeft,
+	convertTicksToDuration,
+	convertDurationToTicks: memoize(convertDurationToTicks),
 };

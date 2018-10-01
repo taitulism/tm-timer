@@ -1,9 +1,3 @@
-/* eslint-env jest */
-/* eslint-disable
-	max-lines-per-function,
-	no-magic-numbers,
-*/
-
 const lolex = require('lolex');
 
 const {
@@ -16,14 +10,11 @@ describe('.stop()', () => {
 	let clock;
 
 	beforeEach(() => {
-		clock = lolex.install({
-			shouldAdvanceTime: true,
-		});
+		clock = lolex.install();
 	});
 
 	afterEach(() => {
 		clock.reset();
-		clock.uninstall();
 	});
 
 	test('return instance', () => {
@@ -43,7 +34,7 @@ describe('.stop()', () => {
 	});
 
 	test('does not call the final callback', () => {
-		const timer = getSpyTimer().start(0);
+		const timer = getSpyTimer().start();
 
 		clock.tick(ALMOST_THREE_SECONDS);
 		timer.stop();
@@ -56,7 +47,7 @@ describe('.stop()', () => {
 		const timer = getSpyTimer();
 		const spy = jest.fn();
 
-		timer.onTick(spy).start(0);
+		timer.onTick(spy).start();
 
 		clock.tick(ALMOST_THREE_SECONDS);
 		expect(timer.tickFn).toHaveBeenCalledTimes(6);

@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 const Timer = require('../');
 
 const HALF_A_SECOND = 500;

@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 const {
 	Timer,
 	THREE_SECONDS,
@@ -13,7 +11,7 @@ describe('Public API', () => {
 	});
 
 	afterEach(() => {
-		timer = null;
+		timer.destroy();
 	});
 
 	test('has a method .set()', () => {
@@ -32,11 +30,19 @@ describe('Public API', () => {
 		expect(typeof timer.start).toEqual('function');
 	});
 
+	test('has a method .getTimeLeft()', () => {
+		expect(typeof timer.getTimeLeft).toEqual('function');
+	});
+
 	test('has a method .stop()', () => {
 		expect(typeof timer.stop).toEqual('function');
 	});
 
 	test('has a method .reset()', () => {
 		expect(typeof timer.reset).toEqual('function');
+	});
+
+	test('has a method .destroy()', () => {
+		expect(typeof timer.destroy).toEqual('function');
 	});
 });

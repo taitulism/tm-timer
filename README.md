@@ -2,7 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/taitulism/tm-timer.svg?branch=develop)](https://travis-ci.org/taitulism/tm-timer)
 
-A simple count-down Timer class, based on [TM-Ticker](https://github.com/taitulism/ticker) (no GUI)
+A simple count-down Timer class, based on [TM-Ticker](https://github.com/taitulism/tm-ticker) (no GUI)
 
 
 ## Installation
@@ -41,6 +41,9 @@ t.onTick(tickHandler)
 > `now` is optional
 ```js
  t.start(now)
+```
+```js
+ t.getTimeLeft()
 ```
 ```js
  t.stop(now)
@@ -160,6 +163,19 @@ When called after a `.stop()` it acts as a "resume" function. There will be no s
 const timestamp = Date.now()
 
 myTimer.start(timestamp)
+```
+
+
+## .getTimeLeft()
+Returns how many milliseconds left.
+
+```js
+const myTimer = new Timer(3000, callback)
+
+myTimer.start()
+
+// after 2480 ms (for example)
+myTimer.getTimeLeft() // --> 520
 ```
 
 

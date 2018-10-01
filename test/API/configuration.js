@@ -1,6 +1,3 @@
-/* eslint-env jest */
-/* eslint-disable max-lines-per-function */
-
 const {
 	Timer,
 	THREE_SECONDS,
@@ -15,7 +12,7 @@ describe('Configuration', () => {
 	});
 
 	afterEach(() => {
-		timer = null;
+		timer.destroy();
 	});
 
 	describe('.set(duration)', () => {
@@ -57,6 +54,14 @@ describe('Configuration', () => {
 			const returnValue = timer.onTick(emptyFn);
 
 			expect(returnValue).toBe(timer);
+		});
+
+		test('throws an error on invalid tick callback', () => {
+			function wrapper () {
+				timer.onTick('not a function');
+			}
+
+			expect(wrapper).toThrow(Error);
 		});
 	});
 });

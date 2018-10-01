@@ -1,10 +1,3 @@
-/* eslint-env jest */
-/* eslint-disable
-	max-statements,
-	max-lines-per-function,
-	no-magic-numbers
-*/
-
 const lolex = require('lolex');
 
 const {
@@ -23,7 +16,6 @@ describe('.start()', () => {
 
 	afterEach(() => {
 		clock.reset();
-		clock.uninstall();
 	});
 
 	test('return instance', () => {
@@ -48,7 +40,7 @@ describe('.start()', () => {
 		timer.onTick(spy);
 
 		expect(spy).toHaveBeenCalledTimes(0);
-		timer.start(0);
+		timer.start();
 		expect(spy).toHaveBeenCalledTimes(1);
 		clock.tick(HALF_A_SECOND); // 500
 		expect(spy).toHaveBeenCalledTimes(2);
@@ -74,7 +66,7 @@ describe('.start()', () => {
 	});
 
 	describe('tickHandler', () => {
-		test('called with param 1: boolean (isWholeSecond)', (done) => {
+		test('called with param 1: boolean (isBigTick)', (done) => {
 			let odd = 0;
 			let even = 0;
 
@@ -85,10 +77,10 @@ describe('.start()', () => {
 				done();
 			});
 
-			timer.onTick((isWholeSecond) => {
-				expect(typeof isWholeSecond).toBe('boolean');
+			timer.onTick((isBigTick) => {
+				expect(typeof isBigTick).toBe('boolean');
 
-				if (isWholeSecond) {
+				if (isBigTick) {
 					even++;
 				}
 				else {
@@ -96,7 +88,7 @@ describe('.start()', () => {
 				}
 			});
 
-			timer.start(0);
+			timer.start();
 			clock.tick(THREE_SECONDS);
 		});
 
@@ -107,7 +99,7 @@ describe('.start()', () => {
 
 			let previousTick = 0;
 
-			timer.onTick((isWholeSecond, timeLeft) => {
+			timer.onTick((isBigTick, timeLeft) => {
 				expect(typeof timeLeft).toBe('number');
 
 				const now = Date.now();
@@ -121,7 +113,7 @@ describe('.start()', () => {
 				previousTick = now;
 			});
 
-			timer.start(0);
+			timer.start();
 
 			clock.tick(THREE_SECONDS);
 		});
