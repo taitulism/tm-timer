@@ -1,6 +1,6 @@
 {
   "name": "tm-timer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple countdown Timer class (no GUI)",
   "main": "index.js",
   "scripts": {
@@ -31,11 +31,11 @@
   },
   "homepage": "https://github.com/taitulism/tm-timer#readme",
   "devDependencies": {
-    "eslint": "^5.5.0",
+    "eslint": "^5.6.1",
     "jest": "^23.6.0",
-    "lolex": "^2.7.4"
+    "lolex": "^2.7.5"
   },
   "dependencies": {
-    "tm-ticker": "^1.5.0"
+    "tm-ticker": "^1.5.1"
   }
 }
