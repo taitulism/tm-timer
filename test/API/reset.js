@@ -1,4 +1,4 @@
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 
 const {
 	ALMOST_THREE_SECONDS,
@@ -13,7 +13,7 @@ describe('.reset()', () => {
 	});
 
 	afterEach(() => {
-		clock.reset();
+		clock.uninstall();
 	});
 
 	test('return instance', () => {
@@ -33,9 +33,9 @@ describe('.reset()', () => {
 			timer.reset(ALMOST_THREE_SECONDS);
 			clock.tick(ALMOST_THREE_SECONDS);
 
-			expect(timer.done).not.toBeCalled();
+			expect(timer.done).not.toHaveBeenCalled();
 			clock.tick(50);
-			expect(timer.done).toBeCalled();
+			expect(timer.done).toHaveBeenCalled();
 		});
 	});
 
@@ -53,9 +53,9 @@ describe('.reset()', () => {
 
 			clock.tick(ALMOST_THREE_SECONDS);
 
-			expect(timer.done).not.toBeCalled();
+			expect(timer.done).not.toHaveBeenCalled();
 			clock.tick(50);
-			expect(timer.done).toBeCalled();
+			expect(timer.done).toHaveBeenCalled();
 		});
 	});
 });

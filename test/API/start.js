@@ -1,4 +1,4 @@
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 
 const {
 	Timer,
@@ -15,7 +15,7 @@ describe('.start()', () => {
 	});
 
 	afterEach(() => {
-		clock.reset();
+		clock.uninstall();
 	});
 
 	test('return instance', () => {

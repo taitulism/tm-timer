@@ -1,4 +1,4 @@
-const lolex = require('lolex');
+const lolex = require('@sinonjs/fake-timers');
 
 const {
 	ALMOST_THREE_SECONDS,
@@ -14,7 +14,7 @@ describe('.stop()', () => {
 	});
 
 	afterEach(() => {
-		clock.reset();
+		clock.uninstall();
 	});
 
 	test('return instance', () => {
